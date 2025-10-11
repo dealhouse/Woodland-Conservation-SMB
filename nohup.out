@@ -1,0 +1,32 @@
+
+> woodland-conservation@0.1.0 start
+> concurrently "npm run start:frontend" "npm run start:backend"
+
+[0] 
+[0] > woodland-conservation@0.1.0 start:frontend
+[0] > HTTPS=true PORT=3080 react-scripts start
+[0] 
+[1] 
+[1] > woodland-conservation@0.1.0 start:backend
+[1] > node OTPserver/server.js
+[1] 
+[1] Server running on http://localhost:3069
+[0] Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+[0]   npx update-browserslist-db@latest
+[0]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[0] (node:808118) [DEP_WEBPACK_DEV_SERVER_HTTPS] DeprecationWarning: 'https' option is deprecated. Please use the 'server' option.
+[0] (Use `node --trace-deprecation ...` to show where the warning was created)
+[0] (node:808118) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+[0] (node:808118) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+[0] Starting the development server...
+[0] 
+[0] Compiled successfully!
+[0] 
+[0] You can now view woodland-conservation in the browser.
+[0] 
+[0]   https://localhost:3080
+[0] 
+[0] Note that the development build is not optimized.
+[0] To create a production build, use npm run build.
+[0] 
+[0] webpack compiled successfully

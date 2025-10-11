@@ -1,0 +1,33 @@
+/**
+ * CSS file for the Gallery page.
+ *
+ *author: Aaron Jayawardana
+ *
+ */
+
+/*Parallax css was added because there is no support for it with tailwindcss*/
+
+/* Styling for the parallax section of the gallery page */
+.parallax-container {
+  position: relative;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Parallax effect: background stays fixed while content moves */
+  background-repeat: no-repeat;
+}
+
+.parallax-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.parallax-heading {
+  font-size: 3rem;
+  font-weight: bold;
+}

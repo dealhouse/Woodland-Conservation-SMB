@@ -1,0 +1,28 @@
+# deps & builds
+node_modules/
+dist/
+build/
+.vite/
+
+# env & logs
+.env
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# editor/system
+.DS_Store
+.vscode/
+.idea/
+*.local
+
+# tests/artifacts
+coverage/
+
+# lock files (optional—keep if you prefer reproducible installs)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock

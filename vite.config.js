@@ -8,9 +8,14 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3069',
+        target: 'http://127.0.0.1:8000',   // Django dev server
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+      // },
+
+      // '/node': {
+      //   target: 'http://127.0.0.1:3069',   // Node legacy server
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/node/, '')
       }
     }
   }

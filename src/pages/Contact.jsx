@@ -58,7 +58,7 @@ const InquiryForm = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3069/send-otp", {
+      const response = await axios.post("/api/send-otp", {
         email: formData.email,
       });
       setOtpSent(true);
@@ -75,7 +75,7 @@ const InquiryForm = () => {
    */
   const verifyOtp = async () => {
     try {
-      const response = await axios.post("http://localhost:3069/verify-otp", {
+      const response = await axios.post("/api/verify-otp", {
         email: formData.email,
         otp: formData.otp,
       });
@@ -112,7 +112,7 @@ const InquiryForm = () => {
       try {
         // Submit the inquiry form
         const response = await axios.post(
-          "http://ugdev.cs.smu.ca:3069/send-confirmation",
+          "/api/send-confirmation",
           {
             email: formData.email,
             fullName: formData.fullName,

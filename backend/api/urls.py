@@ -9,6 +9,6 @@ urlpatterns = [
     path('verify-otp', views.verify_otp, name='verify-otp'),
     path('send-confirmation', views.send_confirmation, name='send-confirmation'),
     path('sightings/', views.sightings),
-    # path('', include(router.urls))
+    path('important-locations/', views.important_locations),
 ]
 

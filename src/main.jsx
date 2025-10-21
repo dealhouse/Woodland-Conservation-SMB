@@ -12,14 +12,14 @@
  */
 
 // Importing COTS libraries
-import React from "react"; // React library for building UI components
-import ReactDOM from "react-dom"; // ReactDOM for rendering React components into the DOM
 import { createRoot } from "react-dom/client"; // React 18's version of ReactDOM
 import { BrowserRouter } from "react-router-dom"; // Provides routing functionality for React applications
 
 // Importing local components and styles
 import App from "./App"; // Main application component
 import "./index.css"; // Global CSS styles for the application
+import 'leaflet/dist/leaflet.css';
+
 
 /**
  * Purpose: Render the main React application inside the root DOM element, wrapping it with routing functionality.

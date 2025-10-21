@@ -16,7 +16,7 @@ module.exports = {
   /**
    * @property {string[]} content - Specifies the paths to all files containing Tailwind CSS classes.
    */
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ['./index.html', "./src/**/*.{js,jsx,ts,tsx}"],
 
   /**
    * @property {object} theme - Defines the theme customization for the site.

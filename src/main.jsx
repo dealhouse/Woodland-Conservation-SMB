@@ -14,6 +14,7 @@
 // Importing COTS libraries
 import React from "react"; // React library for building UI components
 import ReactDOM from "react-dom"; // ReactDOM for rendering React components into the DOM
+import { createRoot } from "react-dom/client"; // React 18's version of ReactDOM
 import { BrowserRouter } from "react-router-dom"; // Provides routing functionality for React applications
 
 // Importing local components and styles
@@ -35,9 +36,12 @@ import "./index.css"; // Global CSS styles for the application
 
 // Wrapping the App component with BrowserRouter to enable routing.
 // ReactDOM.render mounts the App component to the DOM.
-ReactDOM.render(
+  const domNode = document.getElementById("root");
+  const root = createRoot(domNode);
+  root.render(
   <BrowserRouter>
     <App />
-  </BrowserRouter>,
-  document.getElementById("root") // Targeting the HTML element with id "root" as the mounting point
-);
+  </BrowserRouter>
+  )
+ // Targeting the HTML element with id "root" as the mounting point
+  

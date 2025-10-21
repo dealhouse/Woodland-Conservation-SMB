@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from .serializers import SendOtpSerializer, VerifyOtpSerializer, SendConfirmationSerializer
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from .models import Sighting
+from .models import Sighting, ImportantLocation
 from .serializers import SightingGeoSerializer
 from django.views.decorators.http import require_http_methods
 import json
@@ -56,6 +56,43 @@ def sightings(request):
         "id": obj.id,
         "geometry": {"type": "Point", "coordinates": [lon, lat]},
         "properties": {"species": species},
+    }
+    return JsonResponse(feat, status=201)
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def important_locations(request):
+    if request.method == "GET":
+        feats = []
+        for obj in ImportantLocation.objects.all().only("id", "location"):
+            if obj.location:
+                feats.append({
+                    "type": "Feature",
+                    "id": obj.id,
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [float(obj.location.x), float(obj.location.y)]  # [lon, lat]
+                    },
+                    "properties": {
+                        "name": obj.name or ""
+                    }
+                })
+        return JsonResponse({"type": "FeatureCollection", "features": feats}, status=200)
+
+    # POST body: { "lon": <number>, "lat": <number> }
+    try:
+        data = json.loads(request.body or "{}")
+        lon = float(data["lon"]); lat = float(data["lat"])
+    except Exception:
+        return JsonResponse({"detail": "Provide numeric lon and lat"}, status=400)
+
+    name = (data.get("name") or "").strip()
+    obj = ImportantLocation.objects.create(location=Point(lon, lat, srid=4326), name=name)
+    feat = {
+        "type": "Feature",
+        "id": obj.id,
+        "geometry": {"type": "Point", "coordinates": [lon, lat]},
+        "properties": {"name": name},
     }
     return JsonResponse(feat, status=201)
 

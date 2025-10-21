@@ -108,6 +108,15 @@ nav a.active {
     transition: transform 1s ease;
     z-index: 50;
   }
+  .map-label {
+  background: white;
+  border: 1px solid #888;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.sightings-label { border-color: #2f7ed8; }
+.locations-label { border-color: #2ecc71; }
 
   /* Responsive Navbar for Dark Mode */
   .dark header nav {

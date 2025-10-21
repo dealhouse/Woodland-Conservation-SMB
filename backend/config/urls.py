@@ -18,11 +18,26 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
 
+def sightings_inline(_request):
+    # Hardcoded, valid GeoJSON so we can prove routing works
+    return JsonResponse({
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "id": 999,
+                "geometry": {"type": "Point", "coordinates": [-63.5752, 44.6488]},
+                "properties": {"species": "Routing OK"}
+            }
+        ]
+    }, status=200)
+
 def root(_request):
     return JsonResponse({'status': 'ok', 'service': 'django',
                         'endpoints': ['/api/ping/', '/api/send-otp', '/api/verify-otp', '/api/send-confirmation/']})
 
 urlpatterns = [
+    path('sightings', sightings_inline),
     path('', root, name='root'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls'))

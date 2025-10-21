@@ -12,6 +12,7 @@ import Ecosystem from "./pages/Ecosystem"; // Ecosystem page component.
 import Gallery from "./pages/Gallery"; // Gallery page component.
 import NaturalBurial from "./pages/NaturalBurial"; // Natural Burial page component.
 import Contact from "./pages/Contact"; // Contact page component.
+import MapView from "./pages/MapView";
 import { Route, Routes } from "react-router-dom"; // Routing utilities from react-router-dom.
 
 /**
@@ -46,6 +47,8 @@ function App() {
           {/* Route for the Natural Burial page */}
           <Route path="/contacts" element={<Contact />} />{" "}
           {/* Route for the Contact page */}
+          <Route path="/map" element={<MapView />} />{" "}
+          {/* Route for the Map page */}
         </Routes>
       </main>
       {/* Footer */}

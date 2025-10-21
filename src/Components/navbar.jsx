@@ -98,6 +98,9 @@ export default function Navbar() {
           <CustomLink to="/contacts" showNavbar={showNavbar}>
             Contact
           </CustomLink>
+          <CustomLink to="/map" showNavbar={showNavbar}>
+            Map
+          </CustomLink>
           <button
             className="nav-btn nav-close-btn text-light-primary dark:text-dark-primary lg:hidden"
             onClick={showNavbar}

@@ -13,6 +13,51 @@ from rest_framework.throttling import AnonRateThrottle
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from .serializers import SendOtpSerializer, VerifyOtpSerializer, SendConfirmationSerializer
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from .models import Sighting
+from .serializers import SightingGeoSerializer
+from django.views.decorators.http import require_http_methods
+import json
+from django.contrib.gis.geos import Point
+
+
+@csrf_exempt                           # dev-only; fine for now
+@require_http_methods(["GET", "POST"])
+def sightings(request):
+    if request.method == "GET":
+        # Return minimal, valid GeoJSON (geometry is an OBJECT)
+        feats = []
+        for s in Sighting.objects.all().only("id", "species", "location"):
+            if s.location:
+                feats.append({
+                    "type": "Feature",
+                    "id": s.id,
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [float(s.location.x), float(s.location.y)]  # [lon, lat]
+                    },
+                    "properties": {"species": s.species or ""},
+                })
+        return JsonResponse({"type": "FeatureCollection", "features": feats}, status=200)
+
+    # POST: create from { lon, lat, species? }
+    try:
+        data = json.loads(request.body or "{}")
+        lon = float(data["lon"])
+        lat = float(data["lat"])
+    except Exception:
+        return JsonResponse({"detail": "Provide numeric lon and lat"}, status=400)
+
+    species = (data.get("species") or "").strip()
+    obj = Sighting.objects.create(location=Point(lon, lat, srid=4326), species=species)
+
+    feat = {
+        "type": "Feature",
+        "id": obj.id,
+        "geometry": {"type": "Point", "coordinates": [lon, lat]},
+        "properties": {"species": species},
+    }
+    return JsonResponse(feat, status=201)
 
 OTP_TTL_SECONDS = 600  # 10 minutes
 

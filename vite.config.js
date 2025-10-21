@@ -10,12 +10,6 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8000',   // Django dev server
         changeOrigin: true,
-      // },
-
-      // '/node': {
-      //   target: 'http://127.0.0.1:3069',   // Node legacy server
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/node/, '')
       }
     }
   }

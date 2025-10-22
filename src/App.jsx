@@ -5,7 +5,8 @@
  */
 
 import React from "react";
-import { Navbar, Footer } from "./Components/navbar"; // Navbar and Footer components for consistent site navigation and footer layout.
+import { Footer } from "./Components/navi"; // Footer and Navbarr from the Components folder.
+import  Navbar  from "./Components/navi";
 import Home from "./pages/Home"; // Home page component.
 import About from "./pages/About"; // About page component.
 import Ecosystem from "./pages/Ecosystem"; // Ecosystem page component.
@@ -28,7 +29,8 @@ function App() {
       {" "}
       {/* Container for the entire application */}
       {/* Navbar */}
-      <Navbar /> {/* Displays the navigation bar */}
+      <Navbar />
+       {/* Displays the navigation bar */}
       {/* Main Content */}
       <main className="flex-grow">
         {" "}
@@ -36,7 +38,8 @@ function App() {
         <Routes>
           {" "}
           {/* Define application routes */}
-          <Route path="/" element={<Home />} /> {/* Route for the Home page */}
+          <Route path="/" element={<Home />} /> 
+          {/* Route for the Home page */}
           <Route path="/about" element={<About />} />{" "}
           {/* Route for the About page */}
           <Route path="/gallery" element={<Gallery />} />{" "}

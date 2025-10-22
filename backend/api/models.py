@@ -14,4 +14,3 @@ class ImportantLocation(models.Model):
 
     def __str__(self):
         return self.name or f"Important Location({self.location.x:.5f}, {self.location.y:.5f})"
-# Create your models here.

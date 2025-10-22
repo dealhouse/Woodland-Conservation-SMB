@@ -19,7 +19,6 @@ from django.urls import path, include
 from django.http import JsonResponse
 
 def sightings_inline(_request):
-    # Hardcoded, valid GeoJSON so we can prove routing works
     return JsonResponse({
         "type": "FeatureCollection",
         "features": [

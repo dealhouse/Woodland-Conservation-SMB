@@ -25,7 +25,6 @@ from django.contrib.gis.geos import Point
 @require_http_methods(["GET", "POST"])
 def sightings(request):
     if request.method == "GET":
-        # Return minimal, valid GeoJSON (geometry is an OBJECT)
         feats = []
         for s in Sighting.objects.all().only("id", "species", "location"):
             if s.location:
@@ -40,7 +39,6 @@ def sightings(request):
                 })
         return JsonResponse({"type": "FeatureCollection", "features": feats}, status=200)
 
-    # POST: create from { lon, lat, species? }
     try:
         data = json.loads(request.body or "{}")
         lon = float(data["lon"])
@@ -71,7 +69,7 @@ def important_locations(request):
                     "id": obj.id,
                     "geometry": {
                         "type": "Point",
-                        "coordinates": [float(obj.location.x), float(obj.location.y)]  # [lon, lat]
+                        "coordinates": [float(obj.location.x), float(obj.location.y)]
                     },
                     "properties": {
                         "name": obj.name or ""
@@ -79,7 +77,6 @@ def important_locations(request):
                 })
         return JsonResponse({"type": "FeatureCollection", "features": feats}, status=200)
 
-    # POST body: { "lon": <number>, "lat": <number> }
     try:
         data = json.loads(request.body or "{}")
         lon = float(data["lon"]); lat = float(data["lat"])
@@ -96,7 +93,7 @@ def important_locations(request):
     }
     return JsonResponse(feat, status=201)
 
-OTP_TTL_SECONDS = 600  # 10 minutes
+OTP_TTL_SECONDS = 600 
 
 def _otp_key(email: str) -> str:
     return f"otp:{email.lower()}"
@@ -105,7 +102,7 @@ def _generate_otp() -> str:
     return f"{random.randint(100000, 999999)}"
 
 @api_view(["POST"])
-@throttle_classes([AnonRateThrottle])  # basic rate-limit
+@throttle_classes([AnonRateThrottle])
 def send_otp(request):
     serializer = SendOtpSerializer(data=request.data)
     if not serializer.is_valid():
@@ -120,7 +117,6 @@ def send_otp(request):
     try:
         send_mail(subject, text, None, [email], fail_silently=False)
     except Exception as e:
-        # Clean up if email send fails
         cache.delete(_otp_key(email))
         return Response({"error": "Failed to send OTP. Please try again."},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -181,7 +181,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* ============================= [H1] NAV ============================= */}
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-black/10 dark:border-white/10">
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center justify-between">
+        {/* <nav className="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center justify-between">
           <a href="/" className="font-semibold tracking-wide">
             Woodland
           </a>
@@ -202,7 +202,7 @@ export default function Home() {
             {theme === "dark" ? <FaSun /> : <FaMoon />}
             <span className="hidden sm:inline">{theme === "dark" ? "Light" : "Dark"}</span>
           </button>
-        </nav>
+        </nav> */}
       </header>
 
       {/* Murf AI Embed (kept) */}

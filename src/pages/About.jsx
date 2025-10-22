@@ -1,151 +1,217 @@
 /**
- * Purpose: React component containing functionality and styles(Tailwind) for the About Page of the website, including a Text-to-Speech feature for the page's textual content.
- * @author Tania Terence
+ * Purpose: React About Page that satisfies IDs 401–410.
+ * - Tailwind styling only (no external CSS)
+ * - Web Speech API for TTS + Spacebar play/pause
+ * - Image audio button (plays short recording, falls back to TTS)
+ * NOTE: Place optional audio files in /public/audio (<= 2 minutes).
  */
 
+import { useEffect, useRef, useState } from "react";
 
-/**
- * About component
- * @returns the About page as a JSX Element.
- */
-const About = () => {
-  
+const SECTIONS = [
+  {
+    id: "about",
+    title: "About Us",
+    // ID 404: grade ~7 reading level—short, clear sentences.
+    text:
+      "We care for the woodlands around St. Margaret’s Bay. We work with neighbours to protect trees, clean water, and wildlife. We share simple steps that anyone can take to help nature.",
+    imgSrc: "fern-leaves.jpg",
+    imgAlt: "Green fern leaves in a shaded woodland",
+    audioDescSrc: "/audio/about-desc.mp3", // optional real file (<= 2 min)
+    ttsImageFallback:
+      "Photo of green fern leaves growing in a shaded woodland near St. Margaret’s Bay."
+  },
+  {
+    id: "mission",
+    title: "Mission",
+    text:
+      "Our mission is to protect local habitats and support a healthy forest. We plant trees, remove waste, and invite people to join events. Small actions add up when we work together.",
+    imgSrc: "ferns.jpg",
+    imgAlt: "Volunteers planting small trees along a trail",
+    audioDescSrc: "/audio/mission-desc.mp3",
+    ttsImageFallback:
+      "Photo of volunteers planting small trees along a trail. They wear gloves and use small shovels."
+  },
+  {
+    id: "vision",
+    title: "Vision",
+    text:
+      "We see a future where our woodlands thrive. Trails are safe, streams run clean, and animals have space to live. Families can learn and enjoy nature for many years.",
+    imgSrc: "red-maple.jpg",
+    imgAlt: "Red maple leaves in sunlight",
+    audioDescSrc: "/audio/vision-desc.mp3",
+    ttsImageFallback:
+      "Photo of red maple leaves lit by sunlight with forest in the background."
+  }
+];
+
+const btnBase =
+  "inline-flex items-center gap-2 rounded-lg px-3 py-2 font-semibold " +
+  "border focus:outline-none focus-visible:ring-4 " +
+  "transition-colors " +
+  // ID 410: medium brightness + high contrast in both themes
+  "bg-neutral-200 text-neutral-900 border-neutral-500 " +
+  "hover:bg-neutral-300 hover:border-neutral-700 " +
+  "dark:bg-neutral-700 dark:text-white dark:border-neutral-300 " +
+  "dark:hover:bg-neutral-600 dark:hover:border-white " +
+  "focus-visible:ring-blue-400/60 dark:focus-visible:ring-blue-300/60";
+
+export default function About() {
+  const [activeId, setActiveId] = useState(null);
+  const speechRef = useRef({ utter: null, speakingFor: null });
+
+  // ID 406: Space toggles play/pause of active TTS
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.code !== "Space") return;
+      e.preventDefault();
+      const synth = window.speechSynthesis;
+      if (!synth || !speechRef.current.utter) return;
+
+      if (synth.speaking && !synth.paused) synth.pause();
+      else if (synth.paused) synth.resume();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    // stop TTS when unmounting
+    return () => window.speechSynthesis?.cancel();
+  }, []);
+
+  const speak = (sectionId, text) => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    synth.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "en-CA";
+    utter.rate = 1.0; // clear/steady for accessibility
+    utter.onend = () => {
+      speechRef.current.utter = null;
+      speechRef.current.speakingFor = null;
+      setActiveId(null);
+    };
+
+    speechRef.current.utter = utter;
+    speechRef.current.speakingFor = sectionId;
+    setActiveId(sectionId);
+    synth.speak(utter);
+  };
+
+  const handleReadAloud = (sectionId, text) => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+
+    if (speechRef.current.speakingFor === sectionId) {
+      if (synth.speaking && !synth.paused) synth.pause();
+      else if (synth.paused) synth.resume();
+      else speak(sectionId, text);
+      return;
+    }
+    speak(sectionId, text);
+  };
+
+  const playImageAudio = async (sec) => {
+    // Prefer recorded audio if provided (ID 407)
+    if (sec.audioDescSrc) {
+      const a = new Audio(sec.audioDescSrc);
+      a.play().catch(() => speak(`${sec.id}-image`, sec.ttsImageFallback));
+      return;
+    }
+    // Fallback: use short TTS description
+    speak(`${sec.id}-image`, sec.ttsImageFallback);
+  };
+
   return (
-    <div>
+    <main
+      className={
+        // ID 403: Calibri + single line-height, black in light, pale yellow in dark
+        "min-h-screen px-4 py-6 sm:px-6 lg:px-8 " +
+        "text-black dark:text-yellow-100 " +
+        "font-[Calibri] leading-[1.0]"
+      }
+      aria-labelledby="about-title"
+    >
+      {/* ID 401: Title bar */}
+      <header className="border-b border-neutral-300 dark:border-neutral-700 mb-6 pb-3">
+        <h1
+          id="about-title"
+          className="text-2xl sm:text-3xl font-bold text-center"
+        >
+          About St. Margaret’s Bay Woodland Conservation
+        </h1>
+      </header>
 
-      {/*
-      *Audio Player embed code for Text-to-Speech feature
-      * Source credit: Murf AI Voice Generator (Web Version) - "https://murf.ai/"
-      *Author: Tania Terence
-      */}
-      <iframe className="murf-embed w-full" height="102"  src="https://murf.ai/embeds/index.html?embedId=m4na2n49"  allowfullscreen title="Murf Embed Player" style={{border: 'none'}}></iframe>
-      <script src="https://murf.ai/embeds/widget.js" ></script>
-
-      {/*Snap Effect when scrolling*/}
-      <div className="snap-y snap-mandatory overflow-y-scroll h-screen">
-
-        {/*About Section*/}
-        <section className="relative h-screen snap-start">
-
-          {/*
-          * Background image for About section
-          * Image source credit: https://www.pexels.com/
-          */}
-          <div className="absolute inset-0">
-            <img
-              className="absolute object-cover h-screen w-full"
-              src="fern-leaves.jpg"
-              alt="Background Image"
-            />
-          </div>
-
-          {/*Text content (About) and background overlay*/}
-          <div className="absolute flex flex-col items-center justify-center h-screen bg-gray-900 bg-opacity-[0.6] dark:bg-opacity-[0.7]">
-            <div className="text-center text-black bg-[#567c3a] bg-opacity-[0.58] py-[25px] dark:bg-opacity-0 dark:text-[#ffffe8]">
-              <h1 className="text-[25px] sm:text-[35px]">
-                <b>ABOUT </b>
-              </h1>
-              <br />
-              <p className="text-[16.5px] font-medium sm:text-[21px] px-[25px] sm:px-[280px]">
-                Nestled in the heart of Halifax, Nova Scotia, the St. Margaret’s
-                Bay Area Woodland Conservation Site is a sanctuary of natural
-                beauty and biodiversity. Spanning an impressive 200 acres, this
-                conservation area is a verdant tapestry of towering trees, lush
-                undergrowth, and vibrant wildlife. The woodland is home to a
-                diverse range of flora and fauna, including the majestic Red
-                Maple, the delicate Wild Carrot, and the robust Coltsfoot. The
-                Sheep Laurel and Multiflora Rose add a splash of color to the
-                landscape, while the Star-nose Mole and the Little Brown Bat
-                represent some of the unique wildlife species that inhabit the
-                area. The St. Margaret’s Bay Area Woodland Conservation Site is
-                not just a haven for wildlife, but also a living testament to our
-                natural heritage. It is a place where the past meets the present,
-                where the whispering winds carry stories of times long gone, and
-                where every leaf and stone is a piece of history waiting to be
-                discovered.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/*Vision Section*/}
-        <section className="relative h-screen snap-start">
-
-          {/*
-          * Background image for Vision section
-          * Image source credit: https://www.inaturalist.org/
-          */}
-          <div className="absolute inset-0">
-            <img
-              className="absolute object-cover h-screen w-full"
-              src="red-maple.jpg"
-              alt="Background Image"
-            />
-          </div>
-
-          {/*Text content (Vision) and background overlay*/}
-          <div className="absolute flex flex-col items-center justify-center h-screen bg-gray-900 bg-opacity-[0.4] dark:bg-opacity-[0.7]">
-            <div className="text-center text-black py-[30px] bg-[#823d37] bg-opacity-[0.75] py-[25px] dark:bg-opacity-0 dark:text-[#ffffe8]">
-              <h1 data-cy="vision-heading" className="text-[25px] sm:text-[35px]">
-                <b>OUR VISION </b>
-              </h1>
-              <br />
-              <p className="text-[18px] font-medium sm:text-[21px] px-[20px] sm:px-[250px]">
-                We envision the St. Margaret’s Bay Area Woodland Conservation Site
-                as a thriving ecosystem, teeming with life and serving as a model
-                for conservation efforts. We strive to create a space where nature
-                can flourish, where future generations can experience the wonder
-                of the woodland, and where the legacy of our natural heritage is
-                safeguarded for years to come.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/*Mission Section*/}
-        <section className="relative h-screen snap-start">
-
-          {/*
-          * Background image for Mission section
-          * Image source credit: https://www.inaturalist.org/
-          */}
-          <div className="absolute inset-0">
-            <img
-              className="absolute object-cover h-screen w-full"
-              src="ferns.jpg"
-              alt="Background Image"
-            />
-          </div>
-
-          {/*Text content (Mission) and overlay*/}
-          <div className="absolute flex flex-col items-center justify-center h-screen bg-gray-900 bg-opacity-[0.5] dark:bg-opacity-[0.7]">
-            <div className="text-center text-black py-[30px] bg-[#5c7335] bg-opacity-[0.7] py-[25px] dark:bg-opacity-0 dark:text-[#ffffe8]">
-              <h1
-                data-cy="mission-heading"
-                className="text-[25px] sm:text-[35px]"
+      {/* ID 402/408/405/407/410 */}
+      <section className="mx-auto max-w-5xl space-y-4">
+        {SECTIONS.map((sec) => (
+          <article
+            key={sec.id}
+            className="grid grid-cols-1 md:grid-cols-[180px,1fr] gap-4 rounded-xl border border-neutral-300 dark:border-neutral-700 p-4"
+          >
+            {/* Image + audio description (ID 407 & 408) */}
+            <div className="flex flex-col items-start gap-2">
+              <img
+                src={sec.imgSrc}
+                alt={sec.imgAlt}
+                className="w-[180px] h-[130px] object-cover rounded-lg border border-neutral-300 dark:border-neutral-600"
+              />
+              <button
+                className={btnBase}
+                type="button"
+                onClick={() => playImageAudio(sec)}
+                aria-label={`Play audio description for ${sec.title} image`}
+                title="Plays a short recording; falls back to TTS if missing"
               >
-                <b>OUR MISSION </b>
-      
-              </h1>
-              <br />
-              <p className="text-[18px] font-medium sm:text-[21px] px-[20px] sm:px-[250px]">
-                Our mission is to preserve and enhance the ecological integrity of
-                the St. Margaret’s Bay Area Woodland Conservation Site. We are
-                committed to protecting its diverse habitats, promoting
-                sustainable use, and fostering an appreciation for our natural
-                heritage through education and community engagement.
-              </p>
+                🔊 Image Audio
+              </button>
             </div>
-          </div>
 
-        </section>
+            {/* Text + TTS (IDs 403–406, 410) */}
+            <div className="flex flex-col gap-2">
+              <h2 className="text-xl font-bold">{sec.title}</h2>
+              <p className="text-base">{sec.text}</p>
 
+              <div className="flex items-center gap-3">
+                <button
+                  className={btnBase}
+                  type="button"
+                  aria-pressed={activeId === sec.id}
+                  aria-label={`Play or pause reading for ${sec.title}`}
+                  title="Spacebar will play/pause the active reading"
+                  onClick={() => handleReadAloud(sec.id, sec.text)}
+                >
+                  🗣️ Read Aloud
+                </button>
+                <span className="text-sm opacity-90">
+                  Press <kbd className="border px-1 rounded">Space</kbd> to
+                  play/pause the active TTS
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      {/* ID 409: Learn More button */}
+      <div className="mt-6 flex justify-center">
+        <a
+          href="/learn-more"
+          className={
+            btnBase +
+            " bg-blue-600 text-white border-blue-700 hover:bg-blue-700 dark:bg-blue-500 dark:border-blue-300 dark:hover:bg-blue-400"
+          }
+        >
+          Learn More
+        </a>
       </div>
 
-    </div>
+      {/* Optional accessibility strip to mirror the mock */}
+      <div className="mt-6 text-center text-sm opacity-90">
+        Accessibility: WCAG AA; keyboard navigation; captions/TTS buttons
+      </div>
+    </main>
   );
-};
-
-export default About;
-
-
+}

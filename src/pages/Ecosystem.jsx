@@ -5,7 +5,8 @@
  *
  */
 
-import React from "react";
+import React, { useLayoutEffect, useEffect } from "react";
+import axios from "axios";
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
 import { PiPlantFill } from "react-icons/pi";
@@ -37,6 +38,28 @@ const Ecosystem = () => {
    *
    * @param {string} text - Text to be spoken.
    */
+  const [images, setImages] = useState([]);
+  const [imageURLs, setImageURLs] = useState([]);
+
+  useEffect(() => {
+    async function fetchImages() {
+      const res = await axios.get('http://127.0.0.1:8001/cms-api/v2/images/?fields=*')
+      console.log(res)
+      const ecoImage = res.data.items.filter((img) => 
+        img.meta.tags.includes('ecosystem')
+      )
+      const ecoImageURLs = ecoImage.map((img) => ({title: img.title, url: `http://127.0.0.1:8001${img.meta.download_url}`}))
+      setImages(ecoImage)
+      setImageURLs(ecoImageURLs)
+      // console.log(res.data.items.filter((img) => img.meta.tags.includes('ecosystem')))
+    }
+    fetchImages()
+    
+    // console.log(images)
+  }, [])
+  
+  console.log(images)
+  // console.log(images.find((img) => img.title === 'heron').meta.download_url)
   const handleSpeakText = (text) => {
     if (speakingText === text) {
       // Pause if the same text is being spoken
@@ -132,10 +155,14 @@ const Ecosystem = () => {
                     </button>
 
                     {/* Heron Image */}
+                    
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${heron})` }}
-                    ></div>
+                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'heron')?.url || ''})` }}
+                    >
+                      {/* <img src={imageURLs?.find((img) => img?.title === 'heron')?.url || ''} /> */}
+
+                    </div>
 
                     {/* Text on back side of image */}
                     <div className="absolute inset-0 flex items-center justify-center bg-light-background text-black dark:bg-gray-800 dark:text-dark-text text-center rounded-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
@@ -151,7 +178,7 @@ const Ecosystem = () => {
                     {/* Deer Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${deer})` }}
+                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'deer')?.url || ''})` }}
                     ></div>
 
                     {/* TTS Button */}
@@ -186,7 +213,7 @@ const Ecosystem = () => {
                     {/* Coyote Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${coyote})` }}
+                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'coyote')?.url || ''})` }}
                     ></div>
                     <button
                       onClick={() =>

@@ -4,7 +4,8 @@
  *@author Aaron Jayawardana
  *
  * */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Gallery.css';  // Custom CSS since no tailwind support for Parallax
 
 // Import images for the parallax section
@@ -16,22 +17,56 @@ import image4 from '../assets/image4.jpg';
 
 
 function Gallery() {
-  const [images, setImages] = useState([]);  // Stores the uploaded images
+  const [gallery, setGallery] = useState([]);
+  const [imageURLs, setImageURLs] = useState([]);
+const fetchImages = async () => {
+  const res = await axios.get(
+    "http://127.0.0.1:8001/cms-api/v2/images/?fields=*"
+  );
+  const galleryImages = res.data.items.filter(img =>
+  ["gallery", "allowed"].every(tag => (img.meta.tags || []).includes(tag))
+);
+
+  const galleryImageURLs = galleryImages.map((img) => ({
+    title: img.title,
+    url: `http://127.0.0.1:8001${img.meta.download_url}`,
+  }));
+  setGallery(galleryImages);
+  setImageURLs(galleryImageURLs);
+};
+
+useEffect(() => {
+  fetchImages();
+}, []);
 
   /*
    *Purpose: Reads the selected file, converts it to a Data URL, and adds it to the gallery.
    *
    *@param {Event} event - The file input change event triggered by the user.
    * */
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages((prevImages) => [...prevImages, reader.result]);  // Adds the new image to the gallery
-      };
-      reader.readAsDataURL(file);  // Reads the file as a data URL
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file)
+
+    try {
+      await axios.post(
+        'http://127.0.0.1:8001/api/upload-gallery-image/', formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      await fetchImages();
+      event.target.value = '';
     }
+    catch (error) {
+      console.log("Error uploading image:", error);
+    }
+
   };
 
   /*
@@ -81,10 +116,10 @@ function Gallery() {
         <h2 className="text-3xl font-semibold mb-4 text-center">Uploaded Images</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Displays the uploaded images */}
-          {images.map((image, index) => (
+          {imageURLs.map((image, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg bg-white p-4">
               <img
-                src={image}
+                src={image.url}
                 alt={`Uploaded ${index}`}
                 className="w-full h-auto rounded-lg transition-all duration-300 transform hover:scale-105"
               />

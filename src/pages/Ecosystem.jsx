@@ -51,15 +51,11 @@ const Ecosystem = () => {
       const ecoImageURLs = ecoImage.map((img) => ({title: img.title, url: `http://127.0.0.1:8001${img.meta.download_url}`}))
       setImages(ecoImage)
       setImageURLs(ecoImageURLs)
-      // console.log(res.data.items.filter((img) => img.meta.tags.includes('ecosystem')))
     }
     fetchImages()
     
-    // console.log(images)
   }, [])
-  
-  console.log(images)
-  // console.log(images.find((img) => img.title === 'heron').meta.download_url)
+
   const handleSpeakText = (text) => {
     if (speakingText === text) {
       // Pause if the same text is being spoken

@@ -20,8 +20,45 @@ from django.views.decorators.http import require_http_methods
 import json
 from django.contrib.gis.geos import Point
 
+from wagtail.images import get_image_model
+
 
 @csrf_exempt                           # dev-only; fine for now
+
+def upload_gallery_image(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=400)
+
+    uploaded_file = request.FILES.get("file")
+    if not uploaded_file:
+        return JsonResponse({"error": "No file uploaded"}, status=400)
+
+    Image = get_image_model()
+
+    # Save image first so we get a real path
+    image = Image(
+        title=uploaded_file.name,
+        file=uploaded_file,
+    )
+    image.save()
+
+    # Tag as gallery
+    image.tags.add("gallery")
+    image.save()
+
+
+    return JsonResponse(
+        {
+            "id": image.id,
+            "title": image.title,
+            "url": image.file.url,
+            "tags": list(image.tags.names()),
+            "moderation": "approved"
+        },
+        status=201
+    )
+
+
 @require_http_methods(["GET", "POST"])
 def sightings(request):
     if request.method == "GET":

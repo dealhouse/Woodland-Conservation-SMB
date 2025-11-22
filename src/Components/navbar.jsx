@@ -92,7 +92,7 @@ export default function Navbar() {
           <CustomLink to="/gallery" showNavbar={showNavbar}>
             Gallery
           </CustomLink>
-          <CustomLink to="/NaturalBurial" showNavbar={showNavbar}>
+          <CustomLink to="/naturalburial" showNavbar={showNavbar}>
             Natural Burial
           </CustomLink>
           <CustomLink to="/contacts" showNavbar={showNavbar}>

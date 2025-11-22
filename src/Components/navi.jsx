@@ -34,6 +34,7 @@ export default function Navbar() {
           <NavItem to="/about">About</NavItem>
           <NavItem to="/ecosystem">Ecosystem</NavItem>
           <NavItem to="/gallery">Gallery</NavItem>
+          <NavItem to="/naturalburial">Natural Burial</NavItem>
           <NavItem to="/map">Map</NavItem>
           <NavItem to="/contacts">Contact</NavItem>
         </ul>

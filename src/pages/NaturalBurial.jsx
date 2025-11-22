@@ -8,7 +8,46 @@ import { FaVolumeUp, FaPause } from 'react-icons/fa'
 
 const NaturalBurial = () => {
   const [speakingText, setSpeakingText] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({ img: '', title: '', description: '' });
   
+  // Function to open modal with specific content
+  const burialTypesInfo = {
+    img: coffinImage,
+    title: "Types of Natural Burial",
+    description: `Natural burial (or green burial) focuses on environmentally sustainable ways of returning a body to the earth.
+
+I. Traditional Natural Burial Sites
+1. Conservation Burial Grounds - Highest standard, land is protected forever.
+2. Natural Burial Grounds - Managed woodland/meadow habitats.
+3. Hybrid Cemeteries - Conventional cemeteries with natural burial sections.
+
+II. Alternative Eco-Friendly Methods
+1. Natural Organic Reduction (Human Composting)
+2. Alkaline Hydrolysis (Water Cremation)
+3. Tree Pod Burial (Concept concept)`
+  };
+
+  const burialMarkersInfo = {
+    img: markerImage,
+    title: "Burial Markers",
+    description:
+      'Traditional and Natural Burial Markers Physical markers range from the traditional to the environmentally sensitive. Upright Headstones are common in conventional cemeteries but are generally avoided in natural settings. Flat Markers (plaques set flush with the ground) are often used in hybrid cemeteries for simple identification. In strict natural burial grounds, the preferred markers are a Natural Stone/Fieldstone or a Living Marker, such as a native tree or shrub, ensuring the memorial blends into and supports the natural landscape.'
+      
+  };
+
+  const burialLocationsInfo = {
+    img: gpsImage,
+    title: "Burial Locations",
+    description:
+      "Natural burials take place in natural burial grounds, conservation areas, woodlands, meadows, or green cemeteries."
+  };
+
+  const openModal = (info) => {
+    setModalContent(info);
+    setShowModal(true);
+  };
+
   // Load voices when component mounts
   useEffect(() => {
     const loadVoices = () => {
@@ -54,7 +93,7 @@ const NaturalBurial = () => {
     utterance.rate = 0.95;    // Normal speed
     utterance.pitch = 1.05;   // Normal pitch
     utterance.volume = 1.0;  // Normal volume
-    utterance.lang = "en-US"; // Standard US English
+    utterance.lang = "en-CA"; // Standard US English
     
     // Add event listeners
     utterance.onend = () => {
@@ -115,9 +154,11 @@ const NaturalBurial = () => {
             <div className="info-card">
               <img 
                 src={coffinImage} 
-                alt="A simple wooden coffin on grass" 
-                className="card-image" 
-              />
+                className="card-image"
+                onClick={() => openModal(burialTypesInfo)}
+              style={{ cursor: 'pointer' }}
+          />
+      
               <button 
                 onClick={() => handleSpeakText("Kinds of burial include biodegradable coffins made from natural materials like wood or bamboo, burial shrouds made from natural fibers, and direct earth burial where the body is placed directly in contact with the soil.")}
                 className="sound-button small"
@@ -130,8 +171,7 @@ const NaturalBurial = () => {
               </button>
               <h3>Types of Burial</h3>
               <p>Biodegradable coffins, shrouds, and natural burial options</p>
-              <button>Learn more</button>
-
+              <button onClick={() => openModal(burialTypesInfo)}>Learn more</button>
             </div>
             
             <div className="info-card">
@@ -139,6 +179,8 @@ const NaturalBurial = () => {
                 src={markerImage} 
                 alt="A wooden heart-shaped grave marker" 
                 className="card-image" 
+                onClick={() => openModal(burialMarkersInfo)}
+                  style={{ cursor: 'pointer' }}
               />
               <button 
                 onClick={() => handleSpeakText("Burial markers in natural burials use environmentally friendly options like native trees, shrubs, natural stones, wooden posts, or GPS coordinates instead of traditional headstones made from non-biodegradable materials.")}
@@ -153,7 +195,7 @@ const NaturalBurial = () => {
               <h3>🌿 Burial Markers</h3>
               <p>Natural markers like trees, stones, or plants</p>
               
-              <button>Learn more</button>
+              <button onClick={() => openModal(burialMarkersInfo)}> Learn more </button>
             </div>
             
             <div className="info-card">
@@ -161,6 +203,8 @@ const NaturalBurial = () => {
                 src={gpsImage} 
                 alt="A handheld GPS device marking a burial location" 
                 className="card-image" 
+                onClick={() => openModal(burialLocationsInfo)}
+                style={{ cursor: 'pointer' }}
               />
               <button 
                 onClick={() => handleSpeakText("Natural burials take place in designated natural burial grounds, conservation areas, woodlands, meadows, or green cemeteries that are specifically dedicated to environmentally friendly burial practices and habitat preservation.")}
@@ -174,12 +218,27 @@ const NaturalBurial = () => {
               </button>
               <h3>📍 Burial Locations</h3>
               <p>Natural burial grounds and conservation areas</p>
-              
-              <button>Learn more</button>
+              <button onClick={() => openModal(burialLocationsInfo)}>Learn more</button>
             </div>
+            
           </section>
         </div>
       </main>
+
+      {/* Modal */}
+  {showModal && (
+    <div className="modal-overlay" onClick={() => setShowModal(false)}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <img src={modalContent.img} alt={modalContent.title} className="modal-image" />
+        <h2>{modalContent.title}</h2>
+        <p style={{ whiteSpace: "pre-wrap" }}>
+          {modalContent.description}
+        </p>
+        <button className="close-button" onClick={() => setShowModal(false)}>Close</button>
+      </div>
+    </div>
+  )}
+
 
       {/* Footer */}
       <footer className="footer">

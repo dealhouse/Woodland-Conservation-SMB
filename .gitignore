@@ -30,3 +30,15 @@ coverage/
 backend/.venv/
 backend/**/__pycache__/
 backend/*.sqlite3
+media/
+backend/media
+
+backend/.env
+.venv/
+venv/
+
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3

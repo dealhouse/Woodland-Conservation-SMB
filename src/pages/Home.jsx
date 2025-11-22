@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FaVolumeUp, FaPause, FaSun, FaMoon, FaMapMarkerAlt } from "react-icons/fa";
+import { FaVolumeUp, FaPause, FaMapMarkerAlt } from "react-icons/fa";
 import image from "../assets/Light BG Image.jpg";
+import image1 from "../assets/F-Spec-home.png"; // Correct image import
 
 // Persist for ~1 year
 const THEME_KEY = "wc_theme_pref";
@@ -69,14 +70,19 @@ function WeatherWidget() {
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (pos) => setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude, label: "Your location" }),
+      (pos) =>
+        setCoords({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          label: "Your location",
+        }),
       () => setErr("Permission denied; using fallback."),
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-8">
+    <section className="w-full">
       <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-xl font-semibold flex items-center gap-2">
@@ -116,14 +122,38 @@ function WeatherWidget() {
   );
 }
 
+// Modal Component
+const Modal = ({ isOpen, onClose, speciesInfo }) => {
+  if (!isOpen || !speciesInfo) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <img src={speciesInfo.img} alt={speciesInfo.title} className="modal-image" />
+        <h2>{speciesInfo.title}</h2>
+        <p>{speciesInfo.description}</p>
+        <button onClick={onClose} className="close-button">
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Home Component
 export default function Home() {
   const [speakingText, setSpeakingText] = useState("");
   const [theme, setTheme] = useState(() => {
     const stored = getStoredTheme();
     if (stored) return stored;
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
     return prefersDark ? "dark" : "light";
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSpecies, setSelectedSpecies] = useState(null);
 
   useEffect(() => {
     applyTheme(theme);
@@ -147,39 +177,67 @@ export default function Home() {
     }
   };
 
+  // Species info for the modal
+  const featuredSpeciesInfo = {
+    img: image1,
+    title: "Yellow Birch",
+    description:
+      "The Yellow Birch is an important species in the area, known for its distinctive yellow bark and role in local biodiversity. It thrives in woodland areas, providing shelter for various wildlife.",
+  };
+
+  const openModal = () => {
+    setSelectedSpecies(featuredSpeciesInfo);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <div className="relative w-full bg-cover bg-center" style={{ backgroundImage: `url(${image})` }}>
+      {/* Hero */}
+      <div
+        className="relative w-full bg-cover bg-center"
+        style={{ backgroundImage: `url(${image})` }}
+      >
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-6 py-12 mx-auto max-w-7xl">
           <div className="w-full lg:w-1/2 text-left text-white">
             <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
-              Welcome to the <span className="text-light-primary dark:text-dark-primary">Woodland Conservation Site</span>
+              Welcome to the{" "}
+              <span className="text-light-primary dark:text-dark-primary">
+                Woodland Conservation Site
+              </span>
             </h1>
             <p className="text-lg lg:text-2xl max-w-3xl mx-auto">
               <button
                 onClick={() =>
-                  handleSpeakText("Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem.")
+                  handleSpeakText(
+                    "Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem."
+                  )
                 }
                 className="mr-4 mt-1 p-2 bg-transparent text-blue-300 hover:text-white rounded-full shadow-lg hover:bg-white/10 transition"
                 aria-label="Read out loud"
               >
-                {speakingText === "Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem." ? (
+                {speakingText ===
+                "Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem." ? (
                   <FaPause className="text-xl" />
                 ) : (
                   <FaVolumeUp className="text-xl" />
                 )}
               </button>
-              Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem.
+              Explore the serenity of nature and contribute to preserving the
+              delicate balance of our ecosystem.
             </p>
           </div>
           <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
-            <img src={image} alt="Woodland Conservation" className="w-full h-auto rounded-lg shadow-xl" />
+            <img
+              src={image}
+              alt="Woodland Conservation"
+              className="w-full h-auto rounded-lg shadow-xl"
+            />
           </div>
         </div>
       </div>
-
-      <WeatherWidget />
 
       {/* ===================== [What We Do Section] ===================== */}
       <div className="px-4 py-10 lg:px-20">
@@ -189,7 +247,8 @@ export default function Home() {
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
             <h3 className="text-xl font-semibold mb-4">Conservation Projects</h3>
             <p>
-              We focus on preserving natural habitats and wildlife to ensure a healthy ecosystem for future generations.
+              We focus on preserving natural habitats and wildlife to ensure a
+              healthy ecosystem for future generations.
             </p>
             <button
               onClick={() =>
@@ -213,7 +272,8 @@ export default function Home() {
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
             <h3 className="text-xl font-semibold mb-4">Sustainable Practices</h3>
             <p>
-              Learn about eco-friendly practices that help reduce our carbon footprint and contribute to a greener planet.
+              Learn about eco-friendly practices that help reduce our carbon
+              footprint and contribute to a greener planet.
             </p>
             <button
               onClick={() =>
@@ -237,7 +297,8 @@ export default function Home() {
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
             <h3 className="text-xl font-semibold mb-4">Wildlife Protection</h3>
             <p>
-              We are committed to protecting endangered species and restoring biodiversity to our natural surroundings.
+              We are committed to protecting endangered species and restoring
+              biodiversity to our natural surroundings.
             </p>
             <button
               onClick={() =>
@@ -258,6 +319,112 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ===================== [Relevant Articles Section] ===================== */}
+      <div className="px-4 py-10 lg:px-20">
+        <h2 className="text-3xl font-semibold mb-6 text-center">Relevant Articles</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Article 1 */}
+          <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
+            <h3 className="text-xl font-semibold mb-4">Proposed Conservation Area</h3>
+            <p>
+              Discover how the proposed conservation area will bring us closer to achieving our ecological goals.
+            </p>
+            <a
+              href="https://ca.news.yahoo.com/proposed-conservation-area-bring-closer-090000532.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+            >
+              Read More
+            </a>
+          </div>
+
+          {/* Article 2 */}
+          <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
+            <h3 className="text-xl font-semibold mb-4">A Final Footprint</h3>
+            <p>
+              Learn more about the final footprint of conservation efforts in our local area.
+            </p>
+            <a
+              href="https://www.climatestoriesatlantic.ca/stories/a-final-footprint"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+            >
+              Read More
+            </a>
+          </div>
+
+          {/* Article 3 */}
+          <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
+            <h3 className="text-xl font-semibold mb-4">St. Paul's Nova Scotia</h3>
+            <p>
+              This article explores the ongoing conservation and restoration efforts at St. Paul's, Nova Scotia.
+            </p>
+            <a
+              href="https://www.awakeashes.com/blog/stpaulsnovascotia"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+            >
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Weather + Featured Species Row */}
+      <div className="px-4 py-10 lg:px-20">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Weather column */}
+          <div className="w-full md:w-1/2">
+            <WeatherWidget />
+          </div>
+
+          {/* Featured species column */}
+          <div className="w-full md:w-1/2">
+            <section className="w-full">
+              <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
+                <h2 className="text-2xl font-semibold text-center mb-4">
+                  Featured Species
+                </h2>
+
+                {/* Inner species card, smaller */}
+                <div className="mt-2 max-w-xs mx-auto bg-light-background text-black dark:bg-gray-900/80 p-4 rounded-lg shadow-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-center">
+                    Yellow Birch
+                  </h3>
+                  <div className="flex justify-center mb-3">
+                    <img
+                      src={image1}
+                      alt="Yellow Birch"
+                      className="max-w-full h-auto rounded-lg"
+                    />
+                  </div>
+                  <p className="text-sm text-center mb-3">
+                    The Yellow Birch is an important species in the area, known
+                    for its distinctive yellow bark.
+                  </p>
+                  <button
+                    onClick={openModal}
+                    className="mt-1 px-4 py-2 text-sm bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition mx-auto block"
+                  >
+                    Learn More
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        speciesInfo={selectedSpecies}
+      />
     </div>
   );
 }

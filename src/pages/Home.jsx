@@ -82,8 +82,8 @@ function WeatherWidget() {
   };
 
   return (
-    <section className="w-full">
-      <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
+    <section className="w-full fade-in">
+      <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5 transition-all transform hover:scale-105 duration-300">
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-xl font-semibold flex items-center gap-2">
             <FaMapMarkerAlt className="opacity-80" />
@@ -140,7 +140,6 @@ const Modal = ({ isOpen, onClose, speciesInfo }) => {
   );
 };
 
-// Home Component
 export default function Home() {
   const [speakingText, setSpeakingText] = useState("");
   const [theme, setTheme] = useState(() => {
@@ -196,7 +195,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* Hero */}
       <div
-        className="relative w-full bg-cover bg-center"
+        className="relative w-full bg-cover bg-center fade-in"
         style={{ backgroundImage: `url(${image})` }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
@@ -385,13 +384,13 @@ export default function Home() {
           {/* Featured species column */}
           <div className="w-full md:w-1/2">
             <section className="w-full">
-              <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
+              <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5 transition-all transform hover:scale-105 duration-300">
                 <h2 className="text-2xl font-semibold text-center mb-4">
                   Featured Species
                 </h2>
 
                 {/* Inner species card, smaller */}
-                <div className="mt-2 max-w-xs mx-auto bg-light-background text-black dark:bg-gray-900/80 p-4 rounded-lg shadow-lg">
+                <div className="mt-2 max-w-xs mx-auto bg-light-background text-black dark:bg-gray-900/80 p-4 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
                   <h3 className="text-lg font-semibold mb-3 text-center">
                     Yellow Birch
                   </h3>

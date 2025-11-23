@@ -15,7 +15,7 @@ import NaturalBurial from "./pages/NaturalBurial"; // Natural Burial page compon
 import Contact from "./pages/Contact"; // Contact page component.
 import MapView from "./pages/MapView";
 import { Route, Routes } from "react-router-dom"; // Routing utilities from react-router-dom.
-
+import AccessibilityButton from "./Components/AccessibilityButton";
 /**
  * @function App
  * @description The main React component that defines the structure of the application.

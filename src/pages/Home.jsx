@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaVolumeUp, FaPause, FaMapMarkerAlt } from "react-icons/fa";
 import image from "../assets/Light BG Image.jpg";
-import image1 from "../assets/F-Spec-home.png"; // Correct image import
+import image1 from "../assets/F-Spec-home.png"; // Featured species image
+import image2 from "../assets/second-image.jpg";
+import image3 from "../assets/third-image.png";
+import image4 from "../assets/fourth-image.png";
 
 // Persist for ~1 year
 const THEME_KEY = "wc_theme_pref";
@@ -104,11 +107,15 @@ function WeatherWidget() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-base">
               <div>
                 <div className="text-xs opacity-60">Temperature</div>
-                <div className="text-lg font-medium">{Math.round(data.temp)}°C</div>
+                <div className="text-lg font-medium">
+                  {Math.round(data.temp)}°C
+                </div>
               </div>
               <div>
                 <div className="text-xs opacity-60">Wind</div>
-                <div className="text-lg font-medium">{Math.round(data.wind)} km/h</div>
+                <div className="text-lg font-medium">
+                  {Math.round(data.wind)} km/h
+                </div>
               </div>
               <div>
                 <div className="text-xs opacity-60">Timezone</div>
@@ -154,10 +161,23 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
 
+  // hero image rotation
+  const heroImages = [image2, image3, image4];
+  const [heroIndex, setHeroIndex] = useState(0);
+
   useEffect(() => {
     applyTheme(theme);
     storeTheme(theme);
   }, [theme]);
+
+  // rotate hero images every 6 seconds
+  useEffect(() => {
+    const id = setInterval(
+      () => setHeroIndex((prev) => (prev + 1) % heroImages.length),
+      6000
+    );
+    return () => clearInterval(id);
+  }, [heroImages.length]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
 
@@ -228,12 +248,21 @@ export default function Home() {
               delicate balance of our ecosystem.
             </p>
           </div>
+
+          {/* Right hero images with cross-fade */}
           <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
-            <img
-              src={image}
-              alt="Woodland Conservation"
-              className="w-full h-auto rounded-lg shadow-xl"
-            />
+            <div className="relative w-full h-64 sm:h-80 lg:h-96">
+              {heroImages.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt="Woodland Conservation"
+                  className={`absolute inset-0 w-full h-full object-cover rounded-lg shadow-xl transition-opacity duration-1000 ${
+                    heroIndex === idx ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

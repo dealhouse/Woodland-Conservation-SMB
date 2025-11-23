@@ -139,3 +139,36 @@ nav a.active {
     box-sizing: border-box;
   }
 }
+/* Contrast / Dark Mode Optimization */
+/* Ensure all elements switch colors by targeting HTML and BODY together.
+   The existing custom '.dark' styles above already handle many elements, 
+   but this setup ensures the HTML/BODY background is set explicitly. */
+
+/* Default Mode: Use Tailwind's default white/black colors */
+html.contrast-default,
+html.contrast-default body { 
+  @apply bg-white text-black; 
+}
+
+/* Dark Mode: Ensure full page coverage by targeting body */
+html.contrast-dark,
+html.contrast-dark body {
+  /* Use the custom variables defined earlier */
+  background-color: var(--mainColor-dark); 
+  color: var(--textColor-dark); 
+  /* Removing the border property from the HTML tag as it causes visual noise 
+     and typically isn't needed for the main page wrapper. */
+}
+
+/* Light Mode: Use subtle off-white/dark-gray contrast */
+html.contrast-light,
+html.contrast-light body { 
+  /* Use the explicit values, or apply Tailwind classes if they match */
+  background-color: #fdfdfd; 
+  color: #1d0589; 
+}
+
+/* Inverted Mode: This is highly optimized already, no change needed */
+html.contrast-inverted { 
+  filter: invert(100%); 
+}

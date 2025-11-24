@@ -54,6 +54,7 @@ function App() {
           {/* Route for the Map page */}
         </Routes>
       </main>
+      <AccessibilityButton/>
       {/* Footer */}
       <Footer /> {/* Displays the footer */}
     </div>

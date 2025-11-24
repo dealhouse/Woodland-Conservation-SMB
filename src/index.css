@@ -18,7 +18,6 @@
   box-sizing: border-box;
   font-family: "Calibri", sans-serif; /* Global font family */
   font-weight: 300;
-  line-height: 1.5;
   @apply transition-colors duration-200; /* Smooth color transitions */
 }
 
@@ -137,12 +136,23 @@ nav a.active {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    line-height: 1.5;
   }
 }
-/* Contrast / Dark Mode Optimization */
-/* Ensure all elements switch colors by targeting HTML and BODY together.
-   The existing custom '.dark' styles above already handle many elements, 
-   but this setup ensures the HTML/BODY background is set explicitly. */
+/*Accessibility Tab*/
+/* Text Size Options */
+tml.text-small {
+  font-size: 0.875rem; /* ~14px */
+}
+html.text-medium {
+  font-size: 1rem; /* ~16px */
+}
+html.text-large {
+  font-size: 1.25rem; /* ~20px */
+}
+html.text-Massive {
+  font-size: 1.50rem; /* ~24px */
+}
 
 /* Default Mode: Use Tailwind's default white/black colors */
 html.contrast-default,
@@ -156,19 +166,29 @@ html.contrast-dark body {
   /* Use the custom variables defined earlier */
   background-color: var(--mainColor-dark); 
   color: var(--textColor-dark); 
-  /* Removing the border property from the HTML tag as it causes visual noise 
-     and typically isn't needed for the main page wrapper. */
 }
 
-/* Light Mode: Use subtle off-white/dark-gray contrast */
-html.contrast-light,
-html.contrast-light body { 
+html.contrast-greyscale { 
   /* Use the explicit values, or apply Tailwind classes if they match */
-  background-color: #fdfdfd; 
-  color: #1d0589; 
+  filter: grayscale(100%);
 }
-
 /* Inverted Mode: This is highly optimized already, no change needed */
 html.contrast-inverted { 
   filter: invert(100%); 
+}
+/* Line Spacing Options */
+html.linespace-default body {
+  line-height: 1.5; /* current default */
+}
+
+html.linespace-2 body {
+  line-height: 2;
+}
+
+html.linespace-3 body{
+  line-height: 3;
+}
+
+html.linespace-4 body{
+  line-height: 4;
 }

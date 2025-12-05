@@ -2,7 +2,7 @@ import './NaturalBurial.css';
 import burialImage from '../assets/use.png';
 import coffinImage from '../assets/coffin.png';  
 import markerImage from '../assets/Marker.png'; 
-import gpsImage from '../assets/Gps.Png';      
+import gpsImage from '../assets/Gps.png';      
 import React, { useState, useEffect } from 'react'; 
 import { FaVolumeUp, FaPause } from 'react-icons/fa'
 

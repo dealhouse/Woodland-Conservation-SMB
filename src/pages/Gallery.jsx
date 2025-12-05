@@ -3,7 +3,7 @@
  *
  * Combines styling from message.txt + backend fetching from Gallery.jsx
  *
- * @author Aaron Jayawardana
+ * @author Aaron Jayawardanass
  */
 
 import React, { useState, useEffect } from 'react';
@@ -35,7 +35,7 @@ function Gallery() {
   const handleFileChange = async (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
-
+// test
     setUploading(true);
 
     try {

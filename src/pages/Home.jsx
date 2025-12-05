@@ -27,6 +27,9 @@ import image from "../assets/Light BG Image.jpg";
 const THEME_KEY = "wc_theme_pref";
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 function getStoredTheme() {
   try {
@@ -35,7 +38,11 @@ function getStoredTheme() {
     const { theme, ts } = JSON.parse(raw);
     if (!theme || !ts || Date.now() - ts > YEAR_MS) return null;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     return theme;
+=======
+    return theme; // "light" | "dark"
+>>>>>>> Stashed changes
 =======
     return theme; // "light" | "dark"
 >>>>>>> Stashed changes
@@ -43,6 +50,7 @@ function getStoredTheme() {
     return null;
   }
 }
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 function storeTheme(theme) {
@@ -83,6 +91,8 @@ function WeatherWidget() {
     } finally {
       setLoading(false);
 =======
+=======
+>>>>>>> Stashed changes
 
 function storeTheme(theme) {
   try {
@@ -109,6 +119,27 @@ function WeatherWidget() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [data, setData] = useState(null);
+<<<<<<< Updated upstream
+
+  async function loadWeather(lat, lon) {
+    try {
+      setLoading(true);
+      setErr("");
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m&timezone=auto`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Weather unavailable");
+      const json = await res.json();
+      setData({
+        temp: json?.current?.temperature_2m,
+        wind: json?.current?.wind_speed_10m,
+        tz: json?.timezone ?? "local",
+      });
+    } catch (e) {
+      setErr("Weather unavailable. Showing fallback.");
+      setData(null);
+    } finally {
+      setLoading(false);
+=======
 
   async function loadWeather(lat, lon) {
     try {
@@ -157,6 +188,114 @@ function WeatherWidget() {
   };
 
   return (
+    <section className="mx-auto max-w-5xl px-4 py-8">
+      <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <FaMapMarkerAlt className="opacity-80" />
+            Weather — <span className="opacity-80">{coords.label}</span>
+          </h3>
+          <button
+            onClick={requestLocation}
+            className="text-sm px-3 py-1 rounded-md border border-black/10 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 transition"
+          >
+            Use my location
+          </button>
+        </div>
+
+        <div className="mt-4 text-sm opacity-80">
+          {loading && <p>Loading current conditions…</p>}
+          {!loading && err && <p>{err}</p>}
+          {!loading && !err && data && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-base">
+              <div>
+                <div className="text-xs opacity-60">Temperature</div>
+                <div className="text-lg font-medium">{Math.round(data.temp)}°C</div>
+              </div>
+              <div>
+                <div className="text-xs opacity-60">Wind</div>
+                <div className="text-lg font-medium">{Math.round(data.wind)} km/h</div>
+              </div>
+              <div>
+                <div className="text-xs opacity-60">Timezone</div>
+                <div className="text-lg font-medium">{data.tz}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------- Home --------------------------------- */
+export default function Home() {
+  // Text-to-speech (existing)
+  const [speakingText, setSpeakingText] = useState("");
+
+  // Theme (H2): init from stored pref or system setting, then persist
+  const [theme, setTheme] = useState(() => {
+    const stored = getStoredTheme();
+    if (stored) return stored;
+    // system preference as first-run default
+    const prefersDark =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return prefersDark ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    applyTheme(theme);
+    storeTheme(theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  // TTS handler (existing)
+  const handleSpeakText = (text) => {
+    if (speakingText === text) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.cancel();
+      setSpeakingText("");
+    } else {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-CA";
+      utterance.onend = () => setSpeakingText("");
+      window.speechSynthesis.speak(utterance);
+      setSpeakingText(text);
+>>>>>>> Stashed changes
+    }
+  }
+
+  useEffect(() => {
+    loadWeather(coords.lat, coords.lon);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coords.lat, coords.lon]);
+
+  const requestLocation = () => {
+    if (!("geolocation" in navigator)) {
+      setErr("Geolocation not supported; using fallback.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCoords({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          label: "Your location",
+        });
+      },
+      () => {
+        setErr("Permission denied; using fallback.");
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  return (
+<<<<<<< Updated upstream
     <section className="mx-auto max-w-5xl px-4 py-8">
       <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-gray-800/60 backdrop-blur p-5">
         <div className="flex items-center justify-between gap-4">
@@ -391,6 +530,8 @@ export default function Home() {
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* Hero */}
 =======
+=======
+>>>>>>> Stashed changes
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* ============================= [H1] NAV ============================= */}
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-black/10 dark:border-white/10">
@@ -430,6 +571,9 @@ export default function Home() {
       <script src="https://murf.ai/embeds/widget.js"></script>
 
       {/* ============================ [H3] HERO ============================ */}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       <div
         className="relative w-full bg-cover bg-center fade-in"
@@ -438,9 +582,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-6 py-12 mx-auto max-w-7xl">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <div className="w-full lg:w-1/2 text-left text-white">
             <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
 =======
+=======
+>>>>>>> Stashed changes
           {/* Left: text */}
           <div className="w-full lg:w-1/2 text-left text-white">
             <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4 flex flex-col">
@@ -451,7 +598,11 @@ export default function Home() {
               </span>
             </h1>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <p className="text-lg lg:text-2xl max-w-3xl mx-auto">
+=======
+            <p className="text-lg lg:text-2xl max-w-3xl mx-auto flex items-start">
+>>>>>>> Stashed changes
 =======
             <p className="text-lg lg:text-2xl max-w-3xl mx-auto flex items-start">
 >>>>>>> Stashed changes
@@ -476,6 +627,7 @@ export default function Home() {
             </p>
           </div>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
           {/* Right hero images with cross-fade */}
           <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
@@ -492,6 +644,8 @@ export default function Home() {
               ))}
             </div>
 =======
+=======
+>>>>>>> Stashed changes
           {/* Right: image */}
           <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
             <img
@@ -505,12 +659,18 @@ export default function Home() {
       </div>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       {/* ===================== [What We Do Section] ===================== */}
 =======
+=======
+>>>>>>> Stashed changes
       {/* ============================ [H4] WEATHER ============================ */}
       <WeatherWidget />
 
       {/* ======================== Existing Page Content ======================= */}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       <div className="px-4 py-10 lg:px-20">
         <h2 className="text-3xl font-semibold mb-6 text-center">What We Do</h2>

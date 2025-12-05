@@ -256,56 +256,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* ============================= [H1] NAV ============================= */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-black/10 dark:border-white/10">
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center justify-between">
-          <a href="/" className="font-semibold tracking-wide">
-            Woodland
-          </a>
-          <ul className="hidden md:flex items-center gap-6 text-sm">
-            <li>
-              <a href="/" className="hover:opacity-70">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="/about" className="hover:opacity-70">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="/ecosystem" className="hover:opacity-70">
-                Ecosystem
-              </a>
-            </li>
-            <li>
-              <a href="/gallery" className="hover:opacity-70">
-                Gallery
-              </a>
-            </li>
-            <li>
-              <a href="/map" className="hover:opacity-70">
-                Map
-              </a>
-            </li>
-            <li>
-              <a href="/contact" className="hover:opacity-70">
-                Contact
-              </a>
-            </li>
-          </ul>
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle light and dark mode"
-            className="ml-4 inline-flex items-center gap-2 rounded-md border border-black/10 dark:border-white/20 px-3 py-1.5 text-sm hover:bg-black/5 dark:hover:bg-white/10 transition"
-            title="Light/Dark"
-          >
-            {theme === "dark" ? <FaSun /> : <FaMoon />}
-            <span className="hidden sm:inline">
-              {theme === "dark" ? "Light" : "Dark"}
-            </span>
-          </button>
-        </nav>
-      </header>
+      
 
       {/* Murf AI embed */}
       <iframe

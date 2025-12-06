@@ -2,15 +2,6 @@ This version of the project was migrated from CRA to Vite to be more in line wit
 
 ## 🚀 Quick Start
 
-### Cloning the Repository
-Once added as a collaborator:
-
-**Using SSH (recommended):**
-    git clone git@github.com:dealhouse/Woodland-Conservation-SMB.git
-
-**Using HTTPS:**
-    git clone https://github.com/dealhouse/Woodland-Conservation-SMB.git
-
 **Navigate to the project folder:**
     cd Woodland-Conservation-SMB
 
@@ -18,27 +9,13 @@ Once added as a collaborator:
     # 1) Install dependencies
     npm install
 
-    # 2) Create a local .env file
-    echo "VITE_WEATHER_API_KEY=<secret_api_key_here>" > .env
-
-    # 3) Run frontend
+    # 2) Run frontend
     npm run dev:frontend
 
     This will start the frontend dev server (see package.json for the default port).
 
 ---
 
-## 🔄 Updating and Contributing
-
-**Before editing, always pull the latest changes:**
-    git pull
-
-**To commit and push your own changes:**
-    git add .
-    git commit -m "describe your change here"
-    git push
-
----
 
 ## 🧠 Setup Notes
 - The `.gitignore` file already excludes `node_modules`, build files, and `.env`, so your API keys and dependencies won’t be uploaded to GitHub.  
@@ -51,6 +28,12 @@ The backend requires:
 - PostgreSQL with the PostGIS extension
 - Python 3.10+ with virtualenv
 - GDAL + GEOS (for GeoDjango)
+
+Scripts: 
+
+- If you have installation rights, and are on macOs or Linux, the scripts will install these automatically.
+- If the scripts are run, edit the .env file as needed. 
+- You will be prompted to create an admin for Wagtail, and to enter a username, email and password. These will be used to log into the admin portal later. This will be hosted on http://localhost:8001/cms, and you will enter the details on http://localhost:8001/cms/login 
 
 We provide OS-specific setup scripts that:
 

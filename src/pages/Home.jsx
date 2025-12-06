@@ -1,23 +1,34 @@
+// src/pages/Home.jsx
+
 import React, { useEffect, useState } from "react";
-import { FaVolumeUp, FaPause, FaMapMarkerAlt } from "react-icons/fa";
-import image from "../assets/Light BG Image.jpg";
-import image1 from "../assets/F-Spec-home.png"; // Featured species image
-import image2 from "../assets/second-image.jpg";
+import {
+  FaVolumeUp,
+  FaPause,
+  FaSun,
+  FaMoon,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+
+import image from "../assets/Light BG Image.jpg";        // Background hero image
+import image1 from "../assets/F-Spec-home.png";          // Featured species image
+import image2 from "../assets/second-image.jpg";         // Rotating hero images
 import image3 from "../assets/third-image.png";
 import image4 from "../assets/fourth-image.png";
 
-// Persist for ~1 year
+// -----------------------------------------------------------------------------
+// Theme helpers
+// -----------------------------------------------------------------------------
 const THEME_KEY = "wc_theme_pref";
+// Persist for ~1 year
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
-// Helper functions for theme management
 function getStoredTheme() {
   try {
     const raw = localStorage.getItem(THEME_KEY);
     if (!raw) return null;
     const { theme, ts } = JSON.parse(raw);
     if (!theme || !ts || Date.now() - ts > YEAR_MS) return null;
-    return theme;
+    return theme; // "light" | "dark"
   } catch {
     return null;
   }
@@ -25,18 +36,31 @@ function getStoredTheme() {
 
 function storeTheme(theme) {
   try {
-    localStorage.setItem(THEME_KEY, JSON.stringify({ theme, ts: Date.now() }));
-  } catch {}
+    localStorage.setItem(
+      THEME_KEY,
+      JSON.stringify({ theme, ts: Date.now() })
+    );
+  } catch {
+    // ignore
+  }
 }
 
 function applyTheme(theme) {
-  const root = document.documentElement;
+  const root = document.documentElement; // Tailwind dark mode via class
   if (theme === "dark") root.classList.add("dark");
   else root.classList.remove("dark");
 }
 
+// Rotating hero images
+const heroImages = [image2, image3, image4];
+
+// -----------------------------------------------------------------------------
+// Weather widget (H4)
+// -----------------------------------------------------------------------------
 function WeatherWidget() {
-  const DEFAULT = { lat: 44.6511, lon: -63.5820, label: "Local woodland" };
+  // Halifax-ish fallback
+  const DEFAULT = { lat: 44.6511, lon: -63.582, label: "Local woodland" };
+
   const [coords, setCoords] = useState(DEFAULT);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -65,6 +89,7 @@ function WeatherWidget() {
 
   useEffect(() => {
     loadWeather(coords.lat, coords.lon);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords.lat, coords.lon]);
 
   const requestLocation = () => {
@@ -73,13 +98,16 @@ function WeatherWidget() {
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (pos) =>
+      (pos) => {
         setCoords({
           lat: pos.coords.latitude,
           lon: pos.coords.longitude,
           label: "Your location",
-        }),
-      () => setErr("Permission denied; using fallback."),
+        });
+      },
+      () => {
+        setErr("Permission denied; using fallback.");
+      },
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
@@ -129,14 +157,20 @@ function WeatherWidget() {
   );
 }
 
-// Modal Component
+// -----------------------------------------------------------------------------
+// Modal for Featured Species
+// -----------------------------------------------------------------------------
 const Modal = ({ isOpen, onClose, speciesInfo }) => {
   if (!isOpen || !speciesInfo) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <img src={speciesInfo.img} alt={speciesInfo.title} className="modal-image" />
+        <img
+          src={speciesInfo.img}
+          alt={speciesInfo.title}
+          className="modal-image"
+        />
         <h2>{speciesInfo.title}</h2>
         <p>{speciesInfo.description}</p>
         <button onClick={onClose} className="close-button">
@@ -147,39 +181,48 @@ const Modal = ({ isOpen, onClose, speciesInfo }) => {
   );
 };
 
+// -----------------------------------------------------------------------------
+// Home page
+// -----------------------------------------------------------------------------
 export default function Home() {
+  // Text-to-speech
   const [speakingText, setSpeakingText] = useState("");
+
+  // Theme state
   const [theme, setTheme] = useState(() => {
     const stored = getStoredTheme();
     if (stored) return stored;
     const prefersDark =
+      typeof window !== "undefined" &&
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
     return prefersDark ? "dark" : "light";
   });
 
+  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
 
-  // hero image rotation
-  const heroImages = [image2, image3, image4];
+  // Hero image rotation
   const [heroIndex, setHeroIndex] = useState(0);
 
   useEffect(() => {
     applyTheme(theme);
     storeTheme(theme);
+    
   }, [theme]);
 
-  // rotate hero images every 6 seconds
+  // Rotate hero images every 6 seconds
   useEffect(() => {
     const id = setInterval(
       () => setHeroIndex((prev) => (prev + 1) % heroImages.length),
       6000
     );
     return () => clearInterval(id);
-  }, [heroImages.length]);
+  }, []);
 
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  const toggleTheme = () =>
+    setTheme((t) => (t === "dark" ? "light" : "dark"));
 
   const handleSpeakText = (text) => {
     if (speakingText === text) {
@@ -196,7 +239,7 @@ export default function Home() {
     }
   };
 
-  // Species info for the modal
+  // Species info for modal
   const featuredSpeciesInfo = {
     img: image1,
     title: "Yellow Birch",
@@ -213,21 +256,36 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      {/* Hero */}
+      {/* ============================= [H1] NAV ============================= */}
+      
+
+      {/* Murf AI embed */}
+      <iframe
+        className="murf-embed w-full"
+        height="102"
+        src="https://murf.ai/embeds/index.html?embedId=m4nccss4"
+        allowFullScreen
+        title="Murf Embed Player"
+        style={{ border: "none" }}
+      ></iframe>
+      <script src="https://murf.ai/embeds/widget.js"></script>
+
+      {/* ============================ [H3] HERO ============================ */}
       <div
         className="relative w-full bg-cover bg-center fade-in"
         style={{ backgroundImage: `url(${image})` }}
       >
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-6 py-12 mx-auto max-w-7xl">
+          {/* Left: text */}
           <div className="w-full lg:w-1/2 text-left text-white">
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4 flex flex-col">
               Welcome to the{" "}
               <span className="text-light-primary dark:text-dark-primary">
                 Woodland Conservation Site
               </span>
             </h1>
-            <p className="text-lg lg:text-2xl max-w-3xl mx-auto">
+            <p className="text-lg lg:text-2xl max-w-3xl mx-auto flex items-start">
               <button
                 onClick={() =>
                   handleSpeakText(
@@ -249,7 +307,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Right hero images with cross-fade */}
+          {/* Right: rotating hero images */}
           <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
             <div className="relative w-full h-64 sm:h-80 lg:h-96">
               {heroImages.map((src, idx) => (
@@ -267,13 +325,15 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ===================== [What We Do Section] ===================== */}
+      {/* ======================= What We Do Section ======================== */}
       <div className="px-4 py-10 lg:px-20">
         <h2 className="text-3xl font-semibold mb-6 text-center">What We Do</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Conservation Projects Card */}
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-4">Conservation Projects</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Conservation Projects
+            </h3>
             <p>
               We focus on preserving natural habitats and wildlife to ensure a
               healthy ecosystem for future generations.
@@ -298,7 +358,9 @@ export default function Home() {
 
           {/* Sustainable Practices Card */}
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-4">Sustainable Practices</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Sustainable Practices
+            </h3>
             <p>
               Learn about eco-friendly practices that help reduce our carbon
               footprint and contribute to a greener planet.
@@ -323,7 +385,9 @@ export default function Home() {
 
           {/* Wildlife Protection Card */}
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-4">Wildlife Protection</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Wildlife Protection
+            </h3>
             <p>
               We are committed to protecting endangered species and restoring
               biodiversity to our natural surroundings.
@@ -348,21 +412,26 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ===================== [Relevant Articles Section] ===================== */}
+      {/* ===================== Relevant Articles Section ==================== */}
       <div className="px-4 py-10 lg:px-20">
-        <h2 className="text-3xl font-semibold mb-6 text-center">Relevant Articles</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-center">
+          Relevant Articles
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Article 1 */}
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-4">Proposed Conservation Area</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Proposed Conservation Area
+            </h3>
             <p>
-              Discover how the proposed conservation area will bring us closer to achieving our ecological goals.
+              Discover how the proposed conservation area will bring us closer
+              to achieving our ecological goals.
             </p>
             <a
               href="https://ca.news.yahoo.com/proposed-conservation-area-bring-closer-090000532.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+              className="mt-3 inline-block p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
             >
               Read More
             </a>
@@ -372,13 +441,14 @@ export default function Home() {
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
             <h3 className="text-xl font-semibold mb-4">A Final Footprint</h3>
             <p>
-              Learn more about the final footprint of conservation efforts in our local area.
+              Learn more about the final footprint of conservation efforts in
+              our local area.
             </p>
             <a
               href="https://www.climatestoriesatlantic.ca/stories/a-final-footprint"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+              className="mt-3 inline-block p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
             >
               Read More
             </a>
@@ -386,15 +456,18 @@ export default function Home() {
 
           {/* Article 3 */}
           <div className="bg-light-background text-black dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-4">St. Paul's Nova Scotia</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              St. Paul's Nova Scotia
+            </h3>
             <p>
-              This article explores the ongoing conservation and restoration efforts at St. Paul's, Nova Scotia.
+              This article explores the ongoing conservation and restoration
+              efforts at St. Paul's, Nova Scotia.
             </p>
             <a
               href="https://www.awakeashes.com/blog/stpaulsnovascotia"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
+              className="mt-3 inline-block p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition"
             >
               Read More
             </a>
@@ -402,7 +475,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Weather + Featured Species Row */}
+      {/* ========== Weather + Featured Species row (H4 + modal) ========== */}
       <div className="px-4 py-10 lg:px-20">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Weather column */}
@@ -418,7 +491,6 @@ export default function Home() {
                   Featured Species
                 </h2>
 
-                {/* Inner species card, smaller */}
                 <div className="mt-2 max-w-xs mx-auto bg-light-background text-black dark:bg-gray-900/80 p-4 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
                   <h3 className="text-lg font-semibold mb-3 text-center">
                     Yellow Birch

@@ -154,7 +154,8 @@ const Ecosystem = () => {
                     
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'heron')?.url || ''})` }}
+                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'heron')?.url || ''})` }}
+                      style={{ backgroundImage: `url(${heron})` }}
                     >
                       {/* <img src={imageURLs?.find((img) => img?.title === 'heron')?.url || ''} /> */}
 
@@ -174,7 +175,8 @@ const Ecosystem = () => {
                     {/* Deer Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'deer')?.url || ''})` }}
+                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'deer')?.url || ''})` }}
+                      style={{ backgroundImage: `url(${deer})` }}
                     ></div>
 
                     {/* TTS Button */}
@@ -209,7 +211,8 @@ const Ecosystem = () => {
                     {/* Coyote Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'coyote')?.url || ''})` }}
+                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'coyote')?.url || ''})` }}
+                      style={{ backgroundImage: `url(${coyote})` }}
                     ></div>
                     <button
                       onClick={() =>

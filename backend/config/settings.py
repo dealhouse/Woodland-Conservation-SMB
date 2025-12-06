@@ -137,8 +137,8 @@ DATABASES = {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.environ.get("DB_NAME", default="app"),
         "USER": os.environ.get("DB_USER", default="app"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", default=""),
-        "HOST": os.environ.get("DB_HOST", default="db"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", default="app"),
+        "HOST": os.environ.get("DB_HOST", default="localhost"),
         "PORT": os.environ.get("DB_PORT", default="5432"),
     }
 }
@@ -190,5 +190,14 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+GDAL_LIBRARY_PATH = os.environ.get(
+    "GDAL_LIBRARY_PATH",
+    "/opt/homebrew/opt/gdal/lib/libgdal.dylib",  
+)
+
+GEOS_LIBRARY_PATH = os.environ.get(
+    "GEOS_LIBRARY_PATH",
+    "/opt/homebrew/opt/geos/lib/libgeos_c.dylib",
+)
 
 

@@ -5,8 +5,8 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "=== [1/5] Installing system packages (requires sudo) ==="
 # If you're already root, you can drop sudo here.
-sudo apt-get update
-sudo apt-get install -y \
+apt-get update
+apt-get install -y \
   postgresql postgresql-contrib postgis \
   gdal-bin libgdal-dev libgeos-dev \
   python3-venv python3-dev build-essential

@@ -5,8 +5,6 @@
  *
  */
 
-import React, { useLayoutEffect, useEffect } from "react";
-import axios from "axios";
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
 import { PiPlantFill } from "react-icons/pi";
@@ -38,23 +36,7 @@ const Ecosystem = () => {
    *
    * @param {string} text - Text to be spoken.
    */
-  const [images, setImages] = useState([]);
-  const [imageURLs, setImageURLs] = useState([]);
 
-  useEffect(() => {
-    async function fetchImages() {
-      const res = await axios.get('http://127.0.0.1:8001/cms-api/v2/images/?fields=*')
-      console.log(res)
-      const ecoImage = res.data.items.filter((img) => 
-        img.meta.tags.includes('ecosystem')
-      )
-      const ecoImageURLs = ecoImage.map((img) => ({title: img.title, url: `http://127.0.0.1:8001${img.meta.download_url}`}))
-      setImages(ecoImage)
-      setImageURLs(ecoImageURLs)
-    }
-    fetchImages()
-    
-  }, [])
 
   const handleSpeakText = (text) => {
     if (speakingText === text) {
@@ -154,7 +136,6 @@ const Ecosystem = () => {
                     
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'heron')?.url || ''})` }}
                       style={{ backgroundImage: `url(${heron})` }}
                     >
                       {/* <img src={imageURLs?.find((img) => img?.title === 'heron')?.url || ''} /> */}
@@ -175,7 +156,6 @@ const Ecosystem = () => {
                     {/* Deer Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'deer')?.url || ''})` }}
                       style={{ backgroundImage: `url(${deer})` }}
                     ></div>
 
@@ -211,7 +191,6 @@ const Ecosystem = () => {
                     {/* Coyote Image */}
                     <div
                       className="absolute inset-0 rounded-full shadow-md bg-cover bg-center [backface-visibility:hidden]"
-                      // style={{ backgroundImage: `url(${imageURLs?.find((img) => img?.title === 'coyote')?.url || ''})` }}
                       style={{ backgroundImage: `url(${coyote})` }}
                     ></div>
                     <button

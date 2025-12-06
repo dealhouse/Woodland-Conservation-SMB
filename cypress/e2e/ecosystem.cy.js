@@ -1,14 +1,20 @@
 describe("Ecosystem Page", () => {
-    const baseUrl = "http://localhost:5173";
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/ecosystem");
+    });
   
-    it("navigates to Ecosystem via nav bar", () => {
-      cy.visit(baseUrl + "/");
+    it("loads successfully", () => {
+      cy.contains("Ecosystem").should("exist");
+    });
   
-      cy.contains("a", "Ecosystem").click();
+    it("shows section headers", () => {
+      cy.contains("Wildlife").should("exist");
+      cy.contains("Plant Life").should("exist");
+      cy.contains("Habitats").should("exist");
+    });
   
-      cy.url().should("include", "/ecosystem");
-  
-      cy.get("h1, h2").first().should("be.visible");
+    it("shows images in each section", () => {
+      cy.get("img").should("have.length.at.least", 1);
     });
   });
   

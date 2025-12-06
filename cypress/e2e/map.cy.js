@@ -1,24 +1,21 @@
-describe('Map Page', () => {
-
-    it('loads successfully', () => {
-      cy.visit('http://localhost:5173/map');
-      cy.contains('Return to Site Map').should('exist');
+describe("Map Page", () => {
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/map");
     });
   
-    it('shows the GPS button', () => {
-      cy.visit('http://localhost:5173/map');
-      cy.contains('YOU ARE HERE').should('exist');
+    it("loads successfully", () => {
+      cy.contains("YOU ARE HERE").should("exist");
+      cy.contains("Return to Site Map").should("exist");
     });
   
-    it('contains the map container', () => {
-      cy.visit('http://localhost:5173/map');
-      cy.get('.leaflet-container').should('exist');
+    it("displays site boundaries and markers", () => {
+      cy.get(".leaflet-marker-icon").should("exist");
     });
   
-    it('shows at least one marker', () => {
-      cy.visit('http://localhost:5173/map');
-      cy.get('.leaflet-marker-icon').should('exist');
+    it("includes the yellow birch, farmhouse, and well labels", () => {
+      cy.contains("Coastal Yellow Birch").should("exist");
+      cy.contains("Farmhouse Foundation").should("exist");
+      cy.contains("Well").should("exist");
     });
-  
   });
   

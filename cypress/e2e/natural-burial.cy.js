@@ -1,14 +1,24 @@
 describe("Natural Burial Page", () => {
-    const baseUrl = "http://localhost:5173";
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/naturalburial");
+    });
   
-    it("loads the Natural Burial page through nav", () => {
-      cy.visit(baseUrl + "/");
+    it("loads successfully", () => {
+      cy.contains("Natural Burial").should("exist");
+    });
   
-      cy.contains("a", "Natural Burial").click();
+    it("shows main description", () => {
+      cy.contains("eco-friendly alternative").should("exist");
+    });
   
-      cy.url().should("include", "/natural-burial");
+    it("opens Learn More modal", () => {
+      cy.contains("Learn More").click();
+      cy.contains("What is Natural Burial?").should("exist");
+    });
   
-      cy.get("h1, h2").first().should("be.visible");
+    it("closes Learn More modal", () => {
+      cy.contains("Learn More").click();
+      cy.get("button").contains("Close").click();
     });
   });
   

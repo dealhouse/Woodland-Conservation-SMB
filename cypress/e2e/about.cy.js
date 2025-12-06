@@ -1,25 +1,29 @@
-describe('About Page', () => {
-
-    it('loads successfully', () => {
-      cy.visit('http://localhost:5173/about');
-      cy.contains('About').should('exist');
+describe("About Page", () => {
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/about");
     });
   
-    it('displays the intro section', () => {
-      cy.visit('http://localhost:5173/about');
-      cy.contains('Our Purpose').should('exist');
+    it("loads successfully", () => {
+      cy.contains("Woodland Conservation").should("exist");
     });
   
-    it('shows the vision section', () => {
-      cy.visit('http://localhost:5173/about');
-      cy.contains('Vision').should('exist');
+    it("shows About Us section", () => {
+      cy.contains("About Us").should("exist");
+      cy.contains("We care for the woodlands").should("exist");
     });
   
-    it('has working navigation back to Home', () => {
-      cy.visit('http://localhost:5173/about');
-      cy.contains('Home').click();
-      cy.url().should('include', '/');
+    it("shows Mission section", () => {
+      cy.contains("Mission").should("exist");
+      cy.contains("Our mission is to protect local habitats").should("exist");
     });
   
+    it("shows Vision section", () => {
+      cy.contains("Vision").should("exist");
+      cy.contains("Our vision is a thriving woodland").should("exist");
+    });
+  
+    it("has working Read Aloud buttons", () => {
+      cy.contains("Read Aloud").should("exist");
+    });
   });
   

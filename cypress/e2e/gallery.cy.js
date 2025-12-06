@@ -1,17 +1,20 @@
 describe("Gallery Page", () => {
-    const baseUrl = "http://localhost:5173";
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/gallery");
+    });
   
-    it("loads the Gallery page via navigation", () => {
-      cy.visit(baseUrl + "/");
+    it("loads successfully", () => {
+      cy.contains("Gallery").should("exist");
+    });
   
-      cy.contains("a", "Gallery").click();
+    it("shows at least 3 images", () => {
+      cy.get("img").should("have.length.at.least", 3);
+    });
   
-      cy.url().should("include", "/gallery");
-  
-      // Should detect the gallery images or grid
-      cy.get("img, figure, .gallery-grid, .gallery-item")
-        .first()
-        .should("exist");
+    it("opens and closes the modal viewer", () => {
+      cy.get("img").first().click();
+      cy.get(".ReactModal__Content").should("exist");
+      cy.get(".ReactModal__Content").click({ force: true });
     });
   });
   

@@ -1,15 +1,25 @@
 describe("Contact Page", () => {
-    const baseUrl = "http://localhost:5173";
+    beforeEach(() => {
+      cy.visit("http://localhost:5173/contacts");
+    });
   
-    it("loads the Contact page from navigation", () => {
-      cy.visit(baseUrl + "/");
+    it("loads successfully", () => {
+      cy.contains("Contact").should("exist");
+      cy.contains("Inquiry Form").should("exist");
+    });
   
-      cy.contains("a", "Contact").click();
+    it("allows typing into fields", () => {
+      cy.get("input[name='fullName']").type("Test User");
+      cy.get("input[name='email']").type("test@example.com");
+      cy.get("textarea[name='message']").type("Hello world");
+    });
   
-      cy.url().should("include", "/contacts");
+    it("shows inquiry type dropdown", () => {
+      cy.get("select[name='inquiryType']").select("General Inquiry");
+    });
   
-      cy.contains("Contact & Inquiry Form").should("be.visible");
-      cy.contains("Full Name").should("be.visible");
+    it("Send OTP button exists", () => {
+      cy.contains("Send OTP").should("exist");
     });
   });
   

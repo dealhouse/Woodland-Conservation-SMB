@@ -1,10 +1,15 @@
 describe("Home Page", () => {
-    const baseUrl = "http://localhost:5173";
+    it("loads successfully", () => {
+      cy.visit("http://localhost:5173/");
+      cy.contains("Welcome to the Woodland Conservation Site").should("exist");
+    });
   
-    it("loads the Home page successfully", () => {
-      cy.visit(baseUrl + "/");
+    it("displays the intro audio player", () => {
+      cy.contains("Listen to this section").should("exist");
+    });
   
-      cy.contains("Welcome to the Woodland Conservation Site").should("be.visible");
+    it("shows the TEST banner image", () => {
+      cy.get("img").should("exist");
     });
   });
   

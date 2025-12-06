@@ -13,5 +13,21 @@ module.exports = defineConfig({
       framework: "react",
       bundler: "vite",
     },
+    indexHtmlFile: "cypress/support/component-index.html",
   },
 });
+
+
+// module.exports = defineConfig({
+//   e2e: {
+//     setupNodeEvents(on, config) {},
+//   },
+//   component: {
+//     devServer: {
+//       framework: "react",
+//       bundler: "vite",
+//     },
+//     indexHtmlFile: "cypress/support/component-index.html",
+//   },
+// });
+

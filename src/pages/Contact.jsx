@@ -18,7 +18,10 @@ const InquiryForm = () => {
   const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // NEW: submit button shake offset (for error feedback)
+  // Global form error message (top red text)
+  const [formError, setFormError] = useState("");
+
+  // submit button shake offset (for error feedback)
   const [shakeOffset, setShakeOffset] = useState(0);
 
   // ------------------------------------------------------------
@@ -26,7 +29,7 @@ const InquiryForm = () => {
   // ------------------------------------------------------------
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  // NEW: auto-select inquiry type based on email domain (non-destructive)
+  // auto-select inquiry type based on email domain (non-destructive)
   useEffect(() => {
     const email = formData.email.toLowerCase();
     if (!email || formData.inquiryType) return;
@@ -46,7 +49,7 @@ const InquiryForm = () => {
     }
   }, [formData.email, formData.inquiryType]);
 
-  // NEW: small shake animation for submit button when validation fails
+  // small shake animation for submit button when validation fails
   const triggerShake = () => {
     const sequence = [0, -4, 4, -4, 4, 0];
     let i = 0;
@@ -138,24 +141,32 @@ const InquiryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // clear previous global error
+    setFormError("");
+
     const newErrors = {};
     if (!formData.fullName) newErrors.fullName = "Full Name is required.";
     if (!formData.email) newErrors.email = "Email is required.";
     else if (!validateEmail(formData.email))
       newErrors.email = "Enter a valid email address.";
 
-    if (!formData.otpVerified) newErrors.otp = "Verify OTP before submitting.";
+    // OTP is OPTIONAL now – no required check here
+
     if (!formData.inquiryType)
       newErrors.inquiryType = "Please choose an inquiry type.";
-    if (!formData.message) newErrors.message = "Message cannot be empty.";
-    else if (formData.message.length > 500)
+
+    // Message is OPTIONAL:
+    // only validate if user typed something, and then only for length > 500
+    if (formData.message && formData.message.length > 500) {
       newErrors.message = "Message exceeds 500 characters.";
+    }
 
     setErrors(newErrors);
+
     if (Object.keys(newErrors).length !== 0) {
-      // Trigger shake when there are validation errors
+      setFormError("Please fill in all required fields correctly before submitting the form.");
       triggerShake();
-      return;
+      return; // stop submission if any required field is wrong
     }
 
     try {
@@ -181,6 +192,7 @@ const InquiryForm = () => {
       });
       setOtpSent(false);
       setErrors({});
+      setFormError("");
     } catch (err) {
       alert("Failed to submit form.");
     } finally {
@@ -203,6 +215,7 @@ const InquiryForm = () => {
     setErrors({});
     setSubmitted(false);
     setOtpSent(false);
+    setFormError("");
   };
 
   // ------------------------------------------------------------
@@ -244,6 +257,13 @@ const InquiryForm = () => {
         onSubmit={handleSubmit}
         className="space-y-10 bg-white dark:bg-neutral-900 shadow-lg rounded-xl p-6 transition-opacity duration-500"
       >
+        {/* GLOBAL ERROR MESSAGE */}
+        {formError && (
+          <div className="mb-4 p-3 rounded-md bg-red-50 border border-red-300">
+            <p className="text-red-600 text-sm">{formError}</p>
+          </div>
+        )}
+
         {/* ------------------------------------------------------------ */}
         {/* Section A: Personal Information */}
         {/* ------------------------------------------------------------ */}
@@ -252,7 +272,9 @@ const InquiryForm = () => {
 
           {/* Full Name */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Full Name</label>
+            <label className="block font-medium mb-1">
+              Full Name <span className="italic text-neutral-400 ml-1">(Required)</span>
+            </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 👤
@@ -278,7 +300,9 @@ const InquiryForm = () => {
 
           {/* Email */}
           <div className="mb-3">
-            <label className="block font-medium mb-1">Email Address</label>
+            <label className="block font-medium mb-1">
+              Email Address <span className="italic text-neutral-400 ml-1">(Required)</span>
+            </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 ✉️
@@ -380,7 +404,9 @@ const InquiryForm = () => {
 
           {/* Inquiry Type */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Inquiry Type:</label>
+            <label className="block font-medium mb-1">
+              Inquiry Type <span className="italic text-neutral-400 ml-1">(Required)</span>
+            </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 📂
@@ -418,7 +444,8 @@ const InquiryForm = () => {
           {/* Message */}
           <div>
             <label className="block font-medium mb-1">
-              Message (500 characters max):
+              Message (500 characters max)
+              <span className="italic text-neutral-400 ml-1">(Optional)</span>
             </label>
             <div className="relative">
               <span className="absolute left-3 top-3 pointer-events-none">

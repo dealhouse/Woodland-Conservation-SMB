@@ -1,3 +1,22 @@
+/**
+ * Interactive Site Map Component
+ *
+ * Description:
+ * This component displays the conservation site using an interactive Leaflet map.
+ * Implements all 23 Site Map requirements + Talking Trees requirements, including:
+ *  - Boundaries for site and rewilding area
+ *  - Markers for trailhead, well, farmhouse foundation, sitting area, labyrinth, dock, yellow birch
+ *  - Hover text and popup descriptions
+ *  - User GPS tracking (“YOU ARE HERE”)
+ *  - Return to Site Map button
+ *  - Talking Tree proximity audio (3m radius auto-detection)
+ *  - Bounded map movement + zoom limits
+ *  - Responsive and mobile-friendly map sizing
+ *
+ * Author: Patrick Gosse (A00463761)
+ * Course: CSCI 3428 – Software Engineering
+ */
+
 import { useEffect, useRef, useState } from "react";
 import {
   MapContainer,

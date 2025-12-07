@@ -1,22 +1,20 @@
 /**
- * Final Professional About Page
- * - Responsive for mobile + desktop
- * - TTS with spacebar pause/resume
- * - Image audio with TTS fallback
- * - Card layout with subtle animations + hover
- * - Reading progress bar
- * - Dyslexia-friendly font toggle
- * - High-contrast mode toggle
- * - Line-spacing toggle
- * - Share button (native where supported)
- * - Active card highlight via IntersectionObserver
- * - Leaf animation on Back to Top
- * - Impact stats block
- * - Species spotlight grid (general nature info)
- * - Woodland timeline
- * - Mixed FAQ accordion
- * - Ambient forest sound toggle (OFF by default)
+ * About Page Component
+ * 
+ * Description:
+ * This component renders the About page for the St. Margaret’s Bay Woodland Conservation website.
+ * Features include:
+ *  - Grade-7 reading level text for accessibility
+ *  - Theme-aware Calibri styling (light/dark mode)
+ *  - Text-to-Speech (TTS) with spacebar play/pause support
+ *  - Image description audio buttons
+ *  - Responsive layout for desktop and mobile
+ *  - Requirements IDs 401–410 fully implemented
+ *
+ * Author: Patrick Gosse (A00463761)
+ * Course: CSCI 3428 – Software Engineering
  */
+
 
 import { useEffect, useRef, useState } from "react";
 

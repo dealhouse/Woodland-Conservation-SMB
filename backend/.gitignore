@@ -1,4 +1,5 @@
 .venv/
 backend/media/
 backend/media/*
+.env
 

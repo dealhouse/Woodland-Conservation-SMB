@@ -21,63 +21,25 @@ This version of the project was migrated from CRA to Vite to be more in line wit
 - The `.gitignore` file already excludes `node_modules`, build files, and `.env`, so your API keys and dependencies won’t be uploaded to GitHub.  
 - If you create other sensitive files (like `.env.development` or `.env.production`), make sure they’re listed in `.gitignore` as well.  
 
-## Backend Setup (Django + Wagtail + PostGIS)
+## Backend Setup (Docker)
 
 The backend requires:
 
-- PostgreSQL with the PostGIS extension
-- Python 3.10+ with virtualenv
-- GDAL + GEOS (for GeoDjango)
+- Docker
 
-Scripts: 
-
-- If you have installation rights, and are on macOs or Linux, the scripts will install these automatically.
-- If the scripts are run, edit the .env file as needed. 
-- You will be prompted to create an admin for Wagtail, and to enter a username, email and password. These will be used to log into the admin portal later. This will be hosted on http://localhost:8001/cms, and you will enter the details on http://localhost:8001/cms/login 
-
-We provide OS-specific setup scripts that:
-
-- Create the `app` database and `app` user
-- Enable the `postgis` extension
-- Create a Python virtual environment
-- Install `requirements.txt`
-- Create `.env` (from `.env.example`) if needed
-- Run Django migrations
-
-### macOS (Apple Silicon + Homebrew)
-
+### Steps
+- In the projects/Woodland-Conservation-SMB, in the terminal run:
 ```bash
 cd backend
-./scripts/setup_backend_mac.sh
-source venv/bin/activate
-python manage.py createsuperuser
-python manage.py runserver 0.0.0.0:8001
+cp .env.example .env
+cd ..
 ```
-
-### Linux (Ubuntu/Debian)
-
+- In the terminal run:
 ```bash
-cd backend
-./scripts/setup_backend_linux.sh
-source venv/bin/activate
-python manage.py createsuperuser
-python manage.py runserver 0.0.0.0:8001
+docker compose up --build -d
+docker compose exec web python manage.py createsuperuser
 ```
 
-### Windows (Powershell)
+- You will be prompted to enter a username, email, and password. Use these to login to Wagtail.
 
-Prerequisites: 
-* PostgreSQL + PostGIS installed
-* psql on PATH
-* Python 3 installed
-
-```powershell
-cd backend
-# Only once per machine if needed:
-# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-
-.\scripts\setup_backend_windows.ps1
-python manage.py createsuperuser
-python manage.py runserver 0.0.0.0:8001
-```
-
+- You can access the wagtail admin at localhost:8001/cms, and you will be redirected to the login.

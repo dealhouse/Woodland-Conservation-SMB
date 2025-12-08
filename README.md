@@ -43,3 +43,5 @@ docker compose exec web python manage.py createsuperuser
 - You will be prompted to enter a username, email, and password. Use these to login to Wagtail.
 
 - You can access the wagtail admin at localhost:8001/cms, and you will be redirected to the login.
+
+- Check /backend/.env for current admin and password information.

@@ -1,3 +1,8 @@
+/* @author Rakuzhuwo
+/Add a functianility feature to allow the 
+/button to be scaled to each page
+/
+*/
 import React, { useState } from "react";
 import AccessibilityTab from "./AccessibilityTab";
 import { FiSettings } from "react-icons/fi"; // Using react-icons for a gear icon

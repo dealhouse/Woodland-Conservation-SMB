@@ -1,9 +1,10 @@
-/**
- * @file Ecosystem.js
- * @description React page/component for displaying information about the Woodland Conservation Site's ecosystem. Includes text-to-speech functionality and interactive visuals for flora, fauna, and fungi.
- * @author Alexander Colpitts
- *
+/**@author Dejuan
+ * @file Ecosystem.jsx
+ * @description Component displaying ecosystem information through images, text,
+ * and text-to-speech. Includes interactive flip-cards for flora and fauna with
+ * accessibility-focused narration.
  */
+
 
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";

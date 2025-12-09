@@ -1,3 +1,11 @@
+/** @authour Maher
+ * @file Contact.jsx
+ * @description Contact & Inquiry Form component featuring validation, OTP handling,
+ * email suggestions, dynamic inquiry hints, submission flow, and accessible form UI.
+ * Provides full backend-integrated inquiry workflow.
+ */
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 

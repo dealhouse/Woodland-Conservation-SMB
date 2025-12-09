@@ -1,9 +1,9 @@
-/* A React component that uses tailwind css containing a parallax gallery which
- * also includes an add image section pulling images from the backend.
- *
- * Combines styling from message.txt + backend fetching from Gallery.jsx
- *
- * @author Aaron Jayawardanass
+/**
+ * @file Gallery.jsx
+ * @description React component providing a parallax-style gallery, backend-fetched
+ * images, and an upload interface for user-submitted media.
+ * Includes parallax headers and dynamic gallery grid rendering.
+ * @author Mcgregor
  */
 
 import React, { useState, useEffect } from 'react';

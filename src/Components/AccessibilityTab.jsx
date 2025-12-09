@@ -1,3 +1,7 @@
+/* @author Rakhuzuwo
+/ Added functianilty to the button by allow for dark mode,
+/line spacing, and font size inscrease
+*/
 import React, { useEffect, useState } from "react";
 
 const AccessibilityTab = () => {

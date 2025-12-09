@@ -1,7 +1,8 @@
 /**
- * CSS file for the Gallery page.
- *
- *author: Aaron Jayawardana
+ * @file Gallery.css
+ * @description CSS for parallax gallery sections and uploaded image grid.
+ * Implements custom parallax scrolling and typography styling not covered by Tailwind.
+ *author: Mcgregor
  *
  */
 

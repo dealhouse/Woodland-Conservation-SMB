@@ -1,3 +1,11 @@
+/**@author Rakhuzuwo
+ * @file NaturalBurial.jsx
+ * @description React component presenting Natural Burial information, including
+ * interactive modals, text-to-speech accessibility, and image-based learning cards.
+ * Handles modal state, speech synthesis, and structured content sections.
+ */
+
+
 import './NaturalBurial.css';
 import burialImage from '../assets/use.png';
 import coffinImage from '../assets/coffin.png';  

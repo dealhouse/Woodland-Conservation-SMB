@@ -1,4 +1,10 @@
-// src/pages/Home.jsx
+/**@author xavier Mcdonald
+ * @file Home.jsx
+ * @description Main landing page featuring hero image rotation, theme persistence,
+ * text-to-speech, weather widget integration, featured species modal, and
+ * accessible UI elements for the Woodland Conservation website.
+ */
+
 
 import React, { useEffect, useState } from "react";
 import {

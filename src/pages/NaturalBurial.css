@@ -1,4 +1,9 @@
-/* NaturalBurial.css */
+/**@author Rakhuzuwo
+ * @file NaturalBurial.css
+ * @description Stylesheet for Natural Burial page, defining layout, typography,
+ * card grids, modal design, buttons, and general page theming.
+ */
+
 * {
   margin: 0;
   padding: 0;

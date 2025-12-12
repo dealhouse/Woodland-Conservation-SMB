@@ -45,3 +45,19 @@ docker compose exec web python manage.py createsuperuser
 - You can access the wagtail admin at localhost:8001/cms, and you will be redirected to the login.
 
 - Check /backend/.env for current admin and password information.
+
+## Acknowledgments
+Several images on the website have been sourced from:
+
+(1) "Natural History of the French Village Conservation Woodland
+A Report to the French Village Conservation Woodland Committee
+
+by David Patriquin, Jess Lewis, Livy Fraser, Liam Holwell, Rohan Kariyawansa.  Nov. 2021"
+
+AND
+
+(2) iNaturalist.org
+
+The images are being used for education exclusively and will be individually cited before the general public views them.
+
+
